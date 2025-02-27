@@ -1,8 +1,5 @@
 ---
 title: "331Final"
-Authors: "Catherine Mispagel, Lenka Masic, Owen Loughery, Owen Gresko"
 format: html
 editor: visual
 ---
-
-
