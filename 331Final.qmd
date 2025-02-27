@@ -1,5 +1,35 @@
 ---
 title: "331Final"
-format: html
-editor: visual
+author: "Owen Loughery, Lenka Masic, Catherine Mispagel, Owen Gresko"
+format: 
+  html:
+    self-contained: true
+    code-tools: true
+    toc: true
+    number-sections: true
+    code-fold: true
+editor: source
+execute: 
+  error: true
+  echo: true
+  message: false
+  warning: false
 ---
+
+```{r}
+library(tidyverse)
+library(knitr)
+```
+
+```{r}
+fertility <- read.csv("children_per_woman_total_fertility.csv")
+school <- read.csv("mean_years_in_school_women_of_reproductive_age_15_to_44.csv")
+```
+
+```{r}
+head(fertility)
+head(school)
+```
+
+
+
