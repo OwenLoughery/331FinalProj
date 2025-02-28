@@ -21,15 +21,48 @@ library(tidyverse)
 library(knitr)
 ```
 
+Reading in Data Sets:
+
 ```{r}
 fertility <- read.csv("children_per_woman_total_fertility.csv")
 school <- read.csv("mean_years_in_school_women_of_reproductive_age_15_to_44.csv")
 ```
 
+Cleaning Data:
+
 ```{r}
-head(fertility)
-head(school)
+school <- school |> #Cleaning school df
+  pivot_longer( #pivoting long to make years as rows instead of columns
+    cols = starts_with("X"),
+    names_to = "year",
+    values_to = "mean_years_in_school"
+  ) |>
+  mutate(year = str_remove(year, "X")) #cleaning year variable
+
+fertility <- fertility |> #Cleaning fertility df
+  pivot_longer( #pivoting long to make years as rows instead of columns
+    cols = starts_with("X"),
+    names_to = "year",
+    values_to = "babies_per_woman"
+  ) |>
+  mutate(year = str_remove(year, "X"))  #cleaning year variable
+
+school_fertility_df <- school |> #Joining two data sets
+  inner_join(fertility, #Using inner join because we want to compare relationship between the two variables so do not want missing values
+             by = c("country", "year"))
 ```
 
+Joining Data Sets:
 
+```{r}
+school_fertility_df <- school_fertility_df |> #making year and country as categorical variables
+  mutate(year = fct(year),
+         country = fct(country))
+```
 
+Viewing Cleaned Data:
+
+```{r}
+head(school_fertility_df) |>
+  kable()#viewing cleaned data
+```

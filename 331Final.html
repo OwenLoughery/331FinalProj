@@ -3117,6 +3117,7 @@ vertical-align: -.125em;
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
+<p>Reading in Data Sets:</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -3124,214 +3125,96 @@ vertical-align: -.125em;
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>school <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;mean_years_in_school_women_of_reproductive_age_15_to_44.csv&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
+<p>Cleaning Data:</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(fertility)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>school <span class="ot">&lt;-</span> school <span class="sc">|&gt;</span> <span class="co">#Cleaning school df</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>( <span class="co">#pivoting long to make years as rows instead of columns</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">&quot;X&quot;</span>),</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">&quot;year&quot;</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">&quot;mean_years_in_school&quot;</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">str_remove</span>(year, <span class="st">&quot;X&quot;</span>)) <span class="co">#cleaning year variable</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>fertility <span class="ot">&lt;-</span> fertility <span class="sc">|&gt;</span> <span class="co">#Cleaning fertility df</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>( <span class="co">#pivoting long to make years as rows instead of columns</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">&quot;X&quot;</span>),</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">&quot;year&quot;</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">&quot;babies_per_woman&quot;</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">str_remove</span>(year, <span class="st">&quot;X&quot;</span>))  <span class="co">#cleaning year variable</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>school_fertility_df <span class="ot">&lt;-</span> school <span class="sc">|&gt;</span> <span class="co">#Joining two data sets</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(fertility, <span class="co">#Using inner join because we want to compare relationship between the two variables so do not want missing values</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>             <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;country&quot;</span>, <span class="st">&quot;year&quot;</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>      country X1800 X1801 X1802 X1803 X1804 X1805 X1806 X1807 X1808 X1809 X1810
-1 Afghanistan  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00
-2      Angola  6.93  6.93  6.93  6.93  6.93  6.93  6.93  6.94  6.94  6.94  6.94
-3     Albania  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60
-4     Andorra  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11
-5         UAE  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94
-6   Argentina  6.80  6.80  6.80  6.80  6.80  6.80  6.80  6.80  6.80  6.80  6.80
-  X1811 X1812 X1813 X1814 X1815 X1816 X1817 X1818 X1819 X1820 X1821 X1822 X1823
-1  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00
-2  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.95  6.95  6.95
-3  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60
-4  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11
-5  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94
-6  6.80  6.80  6.80  6.80  6.80  6.80  6.80  6.80  6.80  6.80  6.80  6.80  6.80
-  X1824 X1825 X1826 X1827 X1828 X1829 X1830 X1831 X1832 X1833 X1834 X1835 X1836
-1  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00
-2  6.95  6.95  6.95  6.95  6.95  6.95  6.95  6.95  6.95  6.95  6.95  6.96  6.96
-3  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60
-4  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11
-5  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94
-6  6.80  6.80  6.80  6.80  6.80  6.80  6.80  6.80  6.80  6.80  6.80  6.80  6.80
-  X1837 X1838 X1839 X1840 X1841 X1842 X1843 X1844 X1845 X1846 X1847 X1848 X1849
-1  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00
-2  6.96  6.96  6.96  6.96  6.96  6.96  6.96  6.96  6.96  6.96  6.96  6.96  6.97
-3  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60
-4  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11
-5  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94
-6  6.80  6.80  6.80  6.80  6.80  6.80  6.80  6.80  6.80  6.80  6.80  6.80  6.80
-  X1850 X1851 X1852 X1853 X1854 X1855 X1856 X1857 X1858 X1859 X1860 X1861 X1862
-1  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00
-2  6.97  6.97  6.97  6.97  6.97  6.97  6.97  6.97  6.97  6.97  6.97  6.97  6.97
-3  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60
-4  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11
-5  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94
-6  6.80  6.80  6.80  6.80  6.80  6.80  6.80  6.80  6.80  6.80  6.80  6.80  6.80
-  X1863 X1864 X1865 X1866 X1867 X1868 X1869 X1870 X1871 X1872 X1873 X1874 X1875
-1  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00
-2  6.98  6.98  6.98  6.98  6.98  6.98  6.98  6.98  6.98  6.98  6.98  6.98  6.98
-3  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60
-4  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11
-5  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94
-6  6.80  6.80  6.80  6.80  6.80  6.80  6.80  6.73  6.65  6.58  6.58  6.57  6.57
-  X1876 X1877 X1878 X1879 X1880 X1881 X1882 X1883 X1884 X1885 X1886 X1887 X1888
-1  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00
-2  6.98  6.99  6.99  6.99  6.99  6.99  6.99  6.99  6.99  6.99  6.99  6.99  6.99
-3  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60
-4  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11
-5  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94
-6  6.57  6.57  6.56  6.56  6.56  6.56  6.55  6.47  6.39  6.30  6.22  6.14  6.09
-  X1889 X1890 X1891 X1892 X1893 X1894 X1895 X1896 X1897 X1898 X1899 X1900 X1901
-1  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00
-2  6.99  6.99  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00
-3  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60
-4  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11
-5  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94
-6  6.04  5.99  5.94  5.90  6.26  6.63  7.00  6.48  5.96  5.96  5.95  5.95  5.94
-  X1902 X1903 X1904 X1905 X1906 X1907 X1908 X1909 X1910 X1911 X1912 X1913 X1914
-1  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00
-2  7.00  7.00  7.00  7.01  7.01  7.01  7.01  7.01  7.01  7.01  7.01  7.01  7.01
-3  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60
-4  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11
-5  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94
-6  5.94  5.88  5.82  5.76  5.70  5.64  5.56  5.49  5.41  5.33  5.25  5.28  5.30
-  X1915 X1916 X1917 X1918 X1919 X1920 X1921 X1922 X1923 X1924 X1925 X1926 X1927
-1  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.00  7.03  7.05
-2  7.01  7.01  7.01  7.01  7.02  7.02  7.02  7.02  7.02  7.02  7.02  7.02  7.01
-3  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.60  4.42  4.25
-4  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11
-5  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94  6.94
-6  5.23  5.15  5.08  5.01  4.94  4.86  4.79  4.72  4.65  4.57  4.50  4.43  4.36
-  X1928 X1929 X1930 X1931 X1932 X1933 X1934 X1935 X1936 X1937 X1938 X1939 X1940
-1  7.08  7.11  7.14  7.15  7.17  7.18  7.20  7.22  7.23  7.25  7.26  7.28  7.30
-2  7.01  7.00  7.00  6.97  6.94  6.90  6.87  6.84  6.81  6.77  6.74  6.71  6.67
-3  4.07  3.89  3.72  3.55  3.38  3.60  3.81  4.03  4.24  4.46  4.67  3.82  4.29
-4  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11
-5  6.94  6.94  6.94  6.93  6.92  6.91  6.90  6.89  6.87  6.86  6.85  6.84  6.83
-6  4.26  4.17  4.07  3.98  3.89  3.80  3.71  3.62  3.53  3.44  3.44  3.43  3.43
-  X1941 X1942 X1943 X1944 X1945 X1946 X1947 X1948 X1949 X1950 X1951 X1952 X1953
-1  7.31  7.33  7.35  7.36  7.38  7.39  7.41  7.43  7.44  7.46  7.46  7.44  7.44
-2  6.64  6.61  6.58  6.54  6.51  6.48  6.45  6.41  6.38  6.35  6.36  6.41  6.47
-3  3.85  4.52  4.70  4.89  5.07  5.25  5.43  5.62  5.80  5.98  6.05  6.16  6.28
-4  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.11  2.20  2.26  2.32
-5  6.82  6.81  6.80  6.79  6.78  6.77  6.75  6.74  6.73  6.72  6.71  6.71  6.70
-6  3.42  3.42  3.37  3.33  3.29  3.24  3.20  3.19  3.18  3.16  3.16  3.16  3.15
-  X1954 X1955 X1956 X1957 X1958 X1959 X1960 X1961 X1962 X1963 X1964 X1965 X1966
-1  7.42  7.42  7.41  7.40  7.39  7.38  7.38  7.37  7.37  7.37  7.36  7.35  7.36
-2  6.52  6.58  6.64  6.69  6.75  6.80  6.86  6.92  6.97  7.03  7.09  7.16  7.22
-3  6.38  6.48  6.42  6.35  6.38  6.36  6.33  6.23  6.08  5.91  5.71  5.49  5.34
-4  2.32  2.27  2.30  2.37  2.46  2.55  2.55  2.54  2.55  2.60  2.69  2.72  2.76
-5  6.70  6.68  6.67  6.65  6.63  6.62  6.61  6.59  6.57  6.56  6.55  6.54  6.53
-6  3.14  3.14  3.14  3.13  3.11  3.13  3.13  3.12  3.12  3.10  3.07  3.01  2.97
-  X1967 X1968 X1969 X1970 X1971 X1972 X1973 X1974 X1975 X1976 X1977 X1978 X1979
-1  7.36  7.38  7.40  7.40  7.43  7.45  7.49  7.53  7.54  7.56  7.59  7.60  7.61
-2  7.28  7.33  7.39  7.43  7.47  7.49  7.50  7.50  7.49  7.49  7.48  7.47  7.46
-3  5.31  5.31  5.28  5.16  5.08  4.98  4.83  4.70  4.57  4.37  4.20  4.00  3.78
-4  2.78  2.77  2.77  2.79  2.83  2.91  2.83  2.74  2.46  2.21  2.03  1.88  1.80
-5  6.53  6.54  6.53  6.52  6.52  6.50  6.46  6.41  6.35  6.29  6.22  6.15  6.06
-6  2.99  3.01  3.05  3.09  3.11  3.14  3.17  3.22  3.27  3.32  3.36  3.36  3.34
-  X1980 X1981 X1982 X1983 X1984 X1985 X1986 X1987 X1988 X1989 X1990 X1991 X1992
-1  7.64  7.62  7.60  7.57  7.55  7.55  7.55  7.55  7.55  7.56  7.58  7.63  7.70
-2  7.46  7.46  7.46  7.46  7.46  7.45  7.44  7.41  7.37  7.33  7.27  7.21  7.14
-3  3.59  3.47  3.42  3.32  3.28  3.21  3.14  3.11  3.07  3.03  3.01  2.96  2.89
-4  1.83  1.80  1.73  1.57  1.48  1.43  1.40  1.37  1.37  1.40  1.40  1.40  1.37
-5  5.95  5.81  5.66  5.48  5.30  5.13  5.00  4.88  4.77  4.65  4.51  4.25  4.09
-6  3.30  3.25  3.20  3.15  3.12  3.07  3.05  3.04  3.05  3.02  3.03  3.01  2.99
-  X1993 X1994 X1995 X1996 X1997 X1998 X1999 X2000 X2001 X2002 X2003 X2004 X2005
-1  7.76  7.77  7.77  7.76  7.73  7.69  7.64  7.57  7.45  7.32  7.17  7.02  6.86
-2  7.07  6.99  6.92  6.85  6.79  6.73  6.68  6.64  6.60  6.57  6.53  6.50  6.46
-3  2.81  2.80  2.76  2.67  2.54  2.43  2.31  2.22  2.14  2.00  2.01  1.89  1.79
-4  1.33  1.32  1.32  1.33  1.35  1.38  1.42  1.27  1.31  1.27  1.18  1.23  1.22
-5  3.82  3.76  3.28  3.06  2.83  2.77  2.79  2.73  2.62  2.54  2.49  2.39  2.23
-6  2.97  2.94  2.86  2.78  2.71  2.66  2.64  2.59  2.53  2.49  2.45  2.43  2.43
-  X2006 X2007 X2008 X2009 X2010 X2011 X2012 X2013 X2014 X2015 X2016 X2017 X2018
-1  6.69  6.51  6.39  6.30  6.20  6.09  5.99  5.88  5.77  5.65  5.54  5.43  5.33
-2  6.42  6.37  6.32  6.26  6.19  6.12  6.04  5.95  5.86  5.77  5.69  5.60  5.52
-3  1.69  1.63  1.62  1.64  1.65  1.68  1.72  1.74  1.72  1.63  1.56  1.49  1.42
-4  1.23  1.19  1.25  1.21  1.28  1.32  1.26  1.14  1.17  1.22  1.18  1.13  1.05
-5  1.96  1.79  1.52  1.58  1.57  1.54  1.53  1.53  1.48  1.42  1.37  1.35  1.29
-6  2.40  2.37  2.43  2.40  2.41  2.39  2.30  2.34  2.39  2.35  2.24  2.17  2.07
-  X2019 X2020 X2021 X2022 X2023 X2024 X2025 X2026 X2027 X2028 X2029 X2030 X2031
-1  5.24  5.15  5.04  4.93  4.84  4.76  4.66  4.56  4.48  4.40  4.30  4.22  4.15
-2  5.44  5.37  5.30  5.21  5.12  5.05  4.95  4.89  4.81  4.74  4.67  4.56  4.48
-3  1.40  1.37  1.37  1.36  1.35  1.34  1.33  1.32  1.32  1.32  1.32  1.32  1.33
-4  1.05  1.03  1.06  1.07  1.08  1.09  1.10  1.11  1.11  1.12  1.13  1.13  1.14
-5  1.25  1.29  1.16  1.15  1.20  1.21  1.21  1.21  1.21  1.22  1.22  1.23  1.23
-6  1.88  1.60  1.59  1.48  1.50  1.50  1.51  1.51  1.51  1.51  1.51  1.51  1.51
-  X2032 X2033 X2034 X2035 X2036 X2037 X2038 X2039 X2040 X2041 X2042 X2043 X2044
-1  4.07  4.00  3.95  3.89  3.82  3.76  3.68  3.61  3.56  3.49  3.44  3.39  3.35
-2  4.39  4.31  4.24  4.16  4.09  3.99  3.94  3.87  3.81  3.73  3.66  3.59  3.53
-3  1.33  1.34  1.34  1.35  1.35  1.36  1.36  1.36  1.37  1.37  1.38  1.38  1.38
-4  1.15  1.15  1.16  1.16  1.17  1.18  1.18  1.19  1.19  1.20  1.21  1.21  1.22
-5  1.24  1.25  1.25  1.26  1.26  1.27  1.28  1.28  1.28  1.29  1.29  1.30  1.30
-6  1.52  1.52  1.52  1.52  1.52  1.52  1.53  1.53  1.53  1.52  1.52  1.53  1.53
-  X2045 X2046 X2047 X2048 X2049 X2050 X2051 X2052 X2053 X2054 X2055 X2056 X2057
-1  3.30  3.26  3.22  3.18  3.14  3.09  3.05  3.01  2.98  2.94  2.91  2.88  2.85
-2  3.48  3.43  3.38  3.33  3.29  3.24  3.20  3.16  3.11  3.08  3.04  3.00  2.96
-3  1.38  1.39  1.39  1.39  1.40  1.40  1.40  1.41  1.41  1.41  1.41  1.42  1.42
-4  1.22  1.23  1.23  1.24  1.24  1.25  1.25  1.26  1.26  1.26  1.27  1.27  1.28
-5  1.31  1.31  1.31  1.32  1.32  1.33  1.33  1.34  1.34  1.34  1.35  1.35  1.35
-6  1.53  1.53  1.53  1.53  1.54  1.54  1.54  1.54  1.54  1.54  1.55  1.55  1.55
-  X2058 X2059 X2060 X2061 X2062 X2063 X2064 X2065 X2066 X2067 X2068 X2069 X2070
-1  2.82  2.79  2.76  2.73  2.70  2.68  2.65  2.63  2.61  2.58  2.56  2.53  2.51
-2  2.93  2.90  2.86  2.83  2.80  2.77  2.75  2.72  2.70  2.67  2.65  2.63  2.61
-3  1.42  1.43  1.43  1.43  1.43  1.44  1.44  1.44  1.45  1.45  1.45  1.46  1.46
-4  1.28  1.29  1.29  1.30  1.30  1.31  1.31  1.31  1.32  1.32  1.33  1.33  1.33
-5  1.35  1.36  1.36  1.36  1.37  1.37  1.37  1.38  1.38  1.38  1.38  1.39  1.39
-6  1.55  1.55  1.55  1.55  1.55  1.55  1.55  1.55  1.55  1.55  1.56  1.56  1.56
-  X2071 X2072 X2073 X2074 X2075 X2076 X2077 X2078 X2079 X2080 X2081 X2082 X2083
-1  2.49  2.47  2.44  2.42  2.40  2.38  2.36  2.35  2.33  2.31  2.30  2.28  2.26
-2  2.59  2.56  2.54  2.52  2.50  2.48  2.46  2.44  2.42  2.40  2.38  2.36  2.35
-3  1.46  1.46  1.46  1.46  1.46  1.47  1.47  1.47  1.47  1.47  1.47  1.47  1.47
-4  1.34  1.34  1.34  1.34  1.35  1.35  1.36  1.36  1.36  1.37  1.37  1.37  1.37
-5  1.39  1.39  1.39  1.40  1.40  1.40  1.41  1.41  1.41  1.41  1.42  1.42  1.42
-6  1.56  1.56  1.56  1.56  1.56  1.56  1.57  1.56  1.57  1.57  1.56  1.56  1.57
-  X2084 X2085 X2086 X2087 X2088 X2089 X2090 X2091 X2092 X2093 X2094 X2095 X2096
-1  2.25  2.24  2.22  2.21  2.20  2.18  2.17  2.16  2.14  2.13  2.12  2.11  2.10
-2  2.33  2.32  2.30  2.29  2.28  2.27  2.25  2.24  2.23  2.22  2.21  2.20  2.18
-3  1.48  1.48  1.48  1.48  1.48  1.48  1.48  1.48  1.48  1.49  1.49  1.49  1.49
-4  1.37  1.38  1.38  1.38  1.39  1.39  1.39  1.40  1.40  1.40  1.40  1.40  1.40
-5  1.42  1.42  1.43  1.43  1.43  1.44  1.44  1.44  1.44  1.45  1.45  1.45  1.45
-6  1.57  1.57  1.57  1.57  1.57  1.57  1.57  1.57  1.57  1.57  1.58  1.57  1.58
-  X2097 X2098 X2099 X2100
-1  2.09  2.08  2.07  2.06
-2  2.17  2.16  2.15  2.14
-3  1.49  1.49  1.50  1.49
-4  1.40  1.41  1.41  1.41
-5  1.45  1.46  1.46  1.46
-6  1.58  1.58  1.58  1.58</code></pre>
 </div>
+<p>Joining Data Sets:</p>
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(school)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>school_fertility_df <span class="ot">&lt;-</span> school_fertility_df <span class="sc">|&gt;</span> <span class="co">#making year and country as categorical variables</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">fct</span>(year),</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">country =</span> <span class="fu">fct</span>(country))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>      country X1970 X1971 X1972 X1973 X1974 X1975 X1976 X1977 X1978 X1979 X1980
-1 Afghanistan   0.1   0.1   0.1   0.1   0.1   0.1   0.1   0.1   0.2   0.2   0.2
-2      Angola   0.9   1.0   1.0   1.1   1.1   1.2   1.2   1.3   1.4   1.4   1.5
-3     Albania   5.6   5.7   5.9   6.0   6.2   6.3   6.5   6.6   6.8   7.0   7.1
-4         UAE   3.2   3.4   3.6   3.8   4.0   4.2   4.4   4.6   4.8   5.1   5.3
-5   Argentina   6.6   6.7   6.9   7.0   7.2   7.4   7.5   7.7   7.8   8.0   8.1
-6     Armenia   7.1   7.3   7.4   7.6   7.7   7.9   8.0   8.2   8.4   8.5   8.6
-  X1981 X1982 X1983 X1984 X1985 X1986 X1987 X1988 X1989 X1990 X1991 X1992 X1993
-1   0.2   0.2   0.2   0.2   0.2   0.2   0.3   0.3   0.3   0.3   0.3   0.3   0.4
-2   1.6   1.7   1.8   1.9   2.0   2.0   2.1   2.2   2.3   2.4   2.5   2.6   2.7
-3   7.3   7.4   7.6   7.8   7.9   8.1   8.2   8.3   8.5   8.6   8.8   8.9   9.0
-4   5.5   5.8   6.0   6.3   6.5   6.8   7.1   7.3   7.6   7.8   8.1   8.3   8.6
-5   8.3   8.4   8.5   8.7   8.8   8.9   9.1   9.2   9.3   9.4   9.5   9.7   9.8
-6   8.8   8.9   9.1   9.2   9.3   9.5   9.6   9.7   9.8   9.9  10.0  10.1  10.2
-  X1994 X1995 X1996 X1997 X1998 X1999 X2000 X2001 X2002 X2003 X2004 X2005 X2006
-1   0.4   0.4   0.4   0.4   0.5   0.5   0.5   0.5   0.5   0.6   0.6   0.6   0.7
-2   2.8   2.9   3.0   3.1   3.2   3.4   3.5   3.6   3.7   3.8   3.9   4.0   4.1
-3   9.1   9.3   9.4   9.5   9.6   9.7   9.8   9.9  10.0  10.1  10.2  10.3  10.4
-4   8.8   9.0   9.2   9.5   9.7   9.9  10.1  10.3  10.5  10.7  10.9  11.1  11.2
-5   9.9  10.0  10.1  10.2  10.3  10.5  10.6  10.7  10.8  10.9  11.0  11.1  11.2
-6  10.3  10.4  10.5  10.6  10.7  10.7  10.8  10.9  11.0  11.0  11.1  11.2  11.3
-  X2007 X2008 X2009
-1   0.7   0.7   0.8
-2   4.3   4.4   4.5
-3  10.5  10.6  10.7
-4  11.4  11.5  11.7
-5  11.3  11.4  11.4
-6  11.3  11.4  11.4</code></pre>
+</div>
+<p>Viewing Cleaned Data:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(school_fertility_df) <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>()<span class="co">#viewing cleaned data</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">country</th>
+<th style="text-align: left;">year</th>
+<th style="text-align: right;">mean_years_in_school</th>
+<th style="text-align: right;">babies_per_woman</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Afghanistan</td>
+<td style="text-align: left;">1970</td>
+<td style="text-align: right;">0.1</td>
+<td style="text-align: right;">7.40</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Afghanistan</td>
+<td style="text-align: left;">1971</td>
+<td style="text-align: right;">0.1</td>
+<td style="text-align: right;">7.43</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Afghanistan</td>
+<td style="text-align: left;">1972</td>
+<td style="text-align: right;">0.1</td>
+<td style="text-align: right;">7.45</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Afghanistan</td>
+<td style="text-align: left;">1973</td>
+<td style="text-align: right;">0.1</td>
+<td style="text-align: right;">7.49</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Afghanistan</td>
+<td style="text-align: left;">1974</td>
+<td style="text-align: right;">0.1</td>
+<td style="text-align: right;">7.53</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Afghanistan</td>
+<td style="text-align: left;">1975</td>
+<td style="text-align: right;">0.1</td>
+<td style="text-align: right;">7.54</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <!-- -->
@@ -3810,40 +3693,74 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class>
-<div class="sourceCode" id="cb7" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> &quot;331Final&quot;</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> &quot;Owen Loughery, Lenka Masic, Catherine Mispagel, Owen Gresko&quot;</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span><span class="co"> </span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">    self-contained: true</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">    number-sections: true</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="an">editor:</span><span class="co"> source</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="an">execute:</span><span class="co"> </span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co">  error: true</span></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co">  echo: true</span></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="co">  message: false</span></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co">  warning: false</span></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>fertility <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;children_per_woman_total_fertility.csv&quot;</span>)</span>
-<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>school <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;mean_years_in_school_women_of_reproductive_age_15_to_44.csv&quot;</span>)</span>
-<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(fertility)</span>
-<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(school)</span>
-<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a></span>
+<div class="sourceCode" id="cb6" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> &quot;331Final&quot;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> &quot;Owen Loughery, Lenka Masic, Catherine Mispagel, Owen Gresko&quot;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span><span class="co"> </span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">    self-contained: true</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">    number-sections: true</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="an">editor:</span><span class="co"> source</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="an">execute:</span><span class="co"> </span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co">  error: true</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co">  echo: true</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co">  message: false</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="co">  warning: false</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>Reading in Data Sets:</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>fertility <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;children_per_woman_total_fertility.csv&quot;</span>)</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>school <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;mean_years_in_school_women_of_reproductive_age_15_to_44.csv&quot;</span>)</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>Cleaning Data:</span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>school <span class="ot">&lt;-</span> school <span class="sc">|&gt;</span> <span class="co">#Cleaning school df</span></span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>( <span class="co">#pivoting long to make years as rows instead of columns</span></span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">&quot;X&quot;</span>),</span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">&quot;year&quot;</span>,</span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">&quot;mean_years_in_school&quot;</span></span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">str_remove</span>(year, <span class="st">&quot;X&quot;</span>)) <span class="co">#cleaning year variable</span></span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>fertility <span class="ot">&lt;-</span> fertility <span class="sc">|&gt;</span> <span class="co">#Cleaning fertility df</span></span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>( <span class="co">#pivoting long to make years as rows instead of columns</span></span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">&quot;X&quot;</span>),</span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">&quot;year&quot;</span>,</span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">&quot;babies_per_woman&quot;</span></span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">str_remove</span>(year, <span class="st">&quot;X&quot;</span>))  <span class="co">#cleaning year variable</span></span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>school_fertility_df <span class="ot">&lt;-</span> school <span class="sc">|&gt;</span> <span class="co">#Joining two data sets</span></span>
+<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(fertility, <span class="co">#Using inner join because we want to compare relationship between the two variables so do not want missing values</span></span>
+<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a>             <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;country&quot;</span>, <span class="st">&quot;year&quot;</span>))</span>
+<span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb6-60"><a href="#cb6-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-61"><a href="#cb6-61" aria-hidden="true" tabindex="-1"></a>Joining Data Sets:</span>
+<span id="cb6-62"><a href="#cb6-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-65"><a href="#cb6-65" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb6-66"><a href="#cb6-66" aria-hidden="true" tabindex="-1"></a>school_fertility_df <span class="ot">&lt;-</span> school_fertility_df <span class="sc">|&gt;</span> <span class="co">#making year and country as categorical variables</span></span>
+<span id="cb6-67"><a href="#cb6-67" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">fct</span>(year),</span>
+<span id="cb6-68"><a href="#cb6-68" aria-hidden="true" tabindex="-1"></a>         <span class="at">country =</span> <span class="fu">fct</span>(country))</span>
+<span id="cb6-69"><a href="#cb6-69" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb6-70"><a href="#cb6-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-71"><a href="#cb6-71" aria-hidden="true" tabindex="-1"></a>Viewing Cleaned Data:</span>
+<span id="cb6-72"><a href="#cb6-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-75"><a href="#cb6-75" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb6-76"><a href="#cb6-76" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(school_fertility_df) <span class="sc">|&gt;</span></span>
+<span id="cb6-77"><a href="#cb6-77" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>()<span class="co">#viewing cleaned data</span></span>
+<span id="cb6-78"><a href="#cb6-78" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
