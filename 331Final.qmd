@@ -3,7 +3,7 @@ title: "331Final"
 author: "Owen Loughery, Lenka Masic, Catherine Mispagel, Owen Gresko"
 format: 
   html:
-    self-contained: true
+    embed-resources: true
     code-tools: true
     toc: true
     number-sections: true
@@ -83,4 +83,5 @@ We decided to start by using a pivot long to transform the school dataset into t
 
 ```{r}
 #code
+#change
 ```
