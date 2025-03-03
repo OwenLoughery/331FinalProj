@@ -26,6 +26,7 @@ Reading in Data Sets:
 ```{r}
 fertility <- read.csv("children_per_woman_total_fertility.csv")
 school <- read.csv("mean_years_in_school_women_of_reproductive_age_15_to_44.csv")
+
 ```
 
 **Data and Variable Description:**
@@ -58,6 +59,7 @@ fertility <- fertility |> #Cleaning fertility df
 school_fertility_df <- school |> #Joining two data sets
   inner_join(fertility, #Using inner join because we want to compare relationship between the two variables so do not want missing values
              by = c("country", "year"))
+fertility
 ```
 
 Joining Data Sets:
