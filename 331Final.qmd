@@ -27,6 +27,7 @@ execute:
 library(tidyverse)
 library(knitr)
 library(gganimate)
+library(gifski)
 ```
 
 Reading in Data Sets:
@@ -167,6 +168,8 @@ visual_2 <- school_fertility_df |>
   labs(title = 'Year: {frame_time}', x = "Mean Years in School", y = "Babies Per Woman") +
   transition_time(year) +
   ease_aes("linear")
+
+animation <- animate(visual_2, nframes = 100, fps = 10, renderer = gifski_renderer())
 
 anim_save("fertility_education.gif", visual_2)
 cat('<img src="fertility_education.gif" alt="Fertility vs Education Animation" />')
