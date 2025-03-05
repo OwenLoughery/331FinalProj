@@ -171,7 +171,7 @@ visual_2 <- school_fertility_df |>
 
 animation <- animate(visual_2, nframes = 100, fps = 10, renderer = gifski_renderer())
 
-anim_save("fertility_education.gif", visual_2)
+anim_save("fertility_education.gif", animation)
 cat('<img src="fertility_education.gif" alt="Fertility vs Education Animation" />')
 
 ```
