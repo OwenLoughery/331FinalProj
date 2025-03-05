@@ -26,6 +26,7 @@ execute:
 ```{r}
 library(tidyverse)
 library(knitr)
+library(gganimate)
 ```
 
 Reading in Data Sets:
@@ -91,5 +92,83 @@ We decided to start by using a pivot long to transform the school dataset into t
 ```{r}
 #code
 #change
+
+school_fertility_df |>
+  distinct(country) |> kable()
 ```
 
+```{r}
+school_fertility_df <- school_fertility_df |>
+  mutate(continent = fct_recode(country, "Asia" = "Afghanistan", "Africa" = "Angola", "Europe" = "Albania", "Asia" = "UAE", 
+  "South America" = "Argentina", "Europe" = "Armenia", "North America" = "Antigua and Barbuda", 
+  "Australia" = "Australia", "Europe" = "Austria", "Asia" = "Azerbaijan", "Africa" = "Burundi", 
+  "Europe" = "Belgium", "Africa" = "Benin", "Africa" = "Burkina Faso", "Asia" = "Bangladesh", 
+  "Europe" = "Bulgaria", "Asia" = "Bahrain", "North America" = "Bahamas", "Europe" = "Bosnia and Herzegovina", 
+  "Europe" = "Belarus", "North America" = "Belize", "South America" = "Bolivia", "South America" = "Brazil", 
+  "Africa" = "Botswana", "Africa" = "Central African Republic", "North America" = "Canada", 
+  "Europe" = "Switzerland", "South America" = "Chile", "Asia" = "China", "Africa" = "Cote d'Ivoire", 
+  "Africa" = "Cameroon", "Africa" = "Congo, Dem. Rep.", "Africa" = "Congo, Rep.", "South America" = "Colombia", 
+  "Africa" = "Comoros", "Africa" = "Cape Verde", "North America" = "Costa Rica", "North America" = "Cuba", 
+  "Europe" = "Cyprus", "Europe" = "Czech Republic", "Europe" = "Germany", "Africa" = "Djibouti", 
+  "Europe" = "Denmark", "North America" = "Dominican Republic", "Africa" = "Algeria", 
+  "South America" = "Ecuador", "Africa" = "Egypt", "Africa" = "Eritrea", "Europe" = "Spain", 
+  "Europe" = "Estonia", "Africa" = "Ethiopia", "Europe" = "Finland", "Australia" = "Fiji", "Europe" = "France", 
+  "Africa" = "Gabon", "Europe" = "UK", "Europe" = "Georgia", "Africa" = "Ghana", "Africa" = "Guinea", 
+  "Africa" = "Gambia", "Africa" = "Guinea-Bissau", "Africa" = "Equatorial Guinea", "Europe" = "Greece", 
+  "North America" = "Guatemala", "South America" = "Guyana", "North America" = "Honduras", "Europe" = "Croatia", 
+  "North America" = "Haiti", "Europe" = "Hungary", "Asia" = "Indonesia", "Asia" = "India", 
+  "Europe" = "Ireland", "Asia" = "Iran", "Asia" = "Iraq", "Asia" = "Israel", "Europe" = "Italy", 
+  "North America" = "Jamaica", "Asia" = "Jordan", "Asia" = "Japan", "Asia" = "Kazakhstan", "Africa" = "Kenya", 
+  "Asia" = "Kyrgyz Republic", "Asia" = "Cambodia", "Oceania" = "Kiribati", "Asia" = "South Korea", 
+  "Asia" = "Kuwait", "Asia" = "Lao", "Asia" = "Lebanon", "Africa" = "Liberia", "North America" = "St. Lucia", 
+  "Asia" = "Sri Lanka", "Africa" = "Lesotho", "Europe" = "Lithuania", "Europe" = "Luxembourg", 
+  "Europe" = "Latvia", "Africa" = "Morocco", "Europe" = "Moldova", "Africa" = "Madagascar", 
+  "Asia" = "Maldives", "North America" = "Mexico", "Oceania" = "Marshall Islands", "Europe" = "North Macedonia", 
+  "Africa" = "Mali", "Asia" = "Myanmar", "Europe" = "Montenegro", "Asia" = "Mongolia", 
+  "Africa" = "Mozambique", "Africa" = "Mauritania", "Africa" = "Mauritius", "Africa" = "Malawi", 
+  "Asia" = "Malaysia", "Africa" = "Namibia", "Africa" = "Niger", "Africa" = "Nigeria", 
+  "North America" = "Nicaragua", "Europe" = "Netherlands", "Europe" = "Norway", "Asia" = "Nepal", 
+  "Oceania" = "New Zealand", "Asia" = "Oman", "Asia" = "Pakistan", "North America" = "Panama", 
+  "South America" = "Peru", "Asia" = "Philippines", "Oceania" = "Papua New Guinea", "Europe" = "Poland", 
+  "Europe" = "Portugal", "South America" = "Paraguay", "Asia" = "Palestine", "Asia" = "Qatar", 
+  "Europe" = "Romania", "Europe" = "Russia", "Africa" = "Rwanda", "Asia" = "Saudi Arabia", "Africa" = "Sudan", 
+  "Africa" = "Senegal", "Asia" = "Singapore", "Oceania" = "Solomon Islands", "Africa" = "Sierra Leone", 
+  "North America" = "El Salvador", "Africa" = "Somalia", "Europe" = "Serbia", "Africa" = "Sao Tome and Principe", 
+  "South America" = "Suriname", "Europe" = "Slovak Republic", "Europe" = "Slovenia", "Europe" = "Sweden", 
+  "Africa" = "Eswatini", "Africa" = "Seychelles", "Asia" = "Syria", "Africa" = "Chad", "Africa" = "Togo", 
+  "Asia" = "Thailand", "Asia" = "Tajikistan", "Asia" = "Turkmenistan", "Asia" = "Timor-Leste", 
+  "Oceania" = "Tonga", "North America" = "Trinidad and Tobago", "Africa" = "Tunisia", "Asia" = "Turkey", 
+  "Asia" = "Taiwan", "Africa" = "Tanzania", "Africa" = "Uganda", "Europe" = "Ukraine", "South America" = "Uruguay", 
+  "North America" = "USA", "Asia" = "Uzbekistan", "South America" = "Venezuela", "Asia" = "Vietnam", 
+  "Oceania" = "Vanuatu", "Oceania" = "Samoa", "Asia" = "Yemen", "Africa" = "South Africa", 
+  "Africa" = "Zambia", "Africa" = "Zimbabwe"))
+
+```
+
+```{r}
+#Visual 1
+
+school_fertility_df |>
+  ggplot(aes(x = mean_years_in_school, y = babies_per_woman)) + 
+  geom_point(size = 0.1, color = "lightpink", alpha = 0.3) + 
+  geom_smooth(method = "lm") +
+  labs(x = "Mean Years in School", y = "Babies per Woman",
+       title = "Babies per Woman vs. Mean Years in School") 
+```
+
+```{r}
+#Visual 2
+visual_2 <- school_fertility_df |>
+  mutate(year = as.numeric(year)) |>
+  group_by(year, country) |>
+  ggplot(aes(x = mean_years_in_school, y = babies_per_woman, color = country)) +
+  geom_point(alpha = 0.7, show.legend = FALSE) +
+  facet_wrap(~continent) +
+  labs(title = 'Year: {frame_time}', x = "Mean Years in School", y = "Babies Per Woman") +
+  transition_time(year) +
+  ease_aes("linear")
+
+anim_save("fertility_education.gif", visual_2)
+cat('<img src="fertility_education.gif" alt="Fertility vs Education Animation" />')
+
+```
