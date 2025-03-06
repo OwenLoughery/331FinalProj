@@ -16,18 +16,14 @@ execute:
   warning: false
 ---
 
-## Data and Variable Description
-
-## Hypothesized Relationship Between Variables
-
-## Data Cleaning Process and Decisions
-
 
 ```{r}
 library(tidyverse)
 library(knitr)
 library(gganimate)
 library(gifski)
+library(broom)
+library(kableExtra)
 ```
 
 Reading in Data Sets:
@@ -46,7 +42,7 @@ The two variables we have chosen to explore from GapMinder are babies per woman,
 
 We expect the hypothesized relationship between mean years of schooling for women aged 15-44 and babies per woman (total fertility rate) to be strongly negative. We believe that an increase in years of schooling will be associated with a decrease in the amount of children per woman. With increased education, women are better informed on birth control and other contraception methods. Additionally, schools often provide resources such as birth control, meaning women who have been to school have had greater access to resources. An education also opens up career opportunities for women. Women who have developed careers often have less time to have children in their child bearing years. Lastly, cultural differences also affect the total fertility rate. Areas and countries where women don’t typically receive an education or much schooling tend to have gender roles that depict women as mothers before all else, which could encourage more births.
 
-Cleaning Data:
+## 1.1 Data Cleaning
 
 ```{r}
 school <- school |> #Cleaning school df
@@ -56,6 +52,10 @@ school <- school |> #Cleaning school df
     values_to = "mean_years_in_school"
   ) |>
   mutate(year = str_remove(year, "X")) #cleaning year variable
+```
+
+## 1.2 Pivot Longer
+```{r}
 
 fertility <- fertility |> #Cleaning fertility df
   pivot_longer( #pivoting long to make years as rows instead of columns
@@ -64,43 +64,31 @@ fertility <- fertility |> #Cleaning fertility df
     values_to = "babies_per_woman"
   ) |>
   mutate(year = str_remove(year, "X"))  #cleaning year variable
+```
 
+## 1.3 Joining Datasets
+```{r}
 school_fertility_df <- school |> #Joining two data sets
   inner_join(fertility, #Using inner join because we want to compare relationship between the two variables so do not want missing values
              by = c("country", "year"))
 fertility
-```
 
-Joining Data Sets:
-
-```{r}
 school_fertility_df <- school_fertility_df |> #making year and country as categorical variables
   mutate(year = fct(year),
          country = fct(country))
-```
 
-Viewing Cleaned Data:
-
-```{r}
 head(school_fertility_df) |>
-  kable()#viewing cleaned data
+  kable()
 ```
 
 **Data Cleaning Process and Decisions:**
 
 We decided to start by using a pivot long to transform the school dataset into the format we want it to be in. This step will allow us to have each year as a row instead of a column, which will make data visualization much easier and will allow us to make GIFs of plots over time. We also have a line of code to clean the year variable. We did the same thing for our babies per woman dataset- pivoting long to make the years rows. Once we cleaned both datasets, we decided to use an inner join because we want to compare relationships between the two variables without missing values- they’d just get in the way. After the join, we have code to make year and country categorical variables- allowing for easier grouping, leading to cleaner visualization. Lastly, we made sure that we had the cleaned dataset in correctly by utilizing kable to view the first few rows.
 
-```{r}
-#code
-#change
-
-school_fertility_df |>
-  distinct(country) |> kable()
-```
-
+## 2.1 Data Visualization
 ```{r}
 school_fertility_df <- school_fertility_df |>
-  mutate(continent = fct_recode(country, "Asia" = "Afghanistan", "Africa" = "Angola", "Europe" = "Albania", "Asia" = "UAE", 
+  mutate(Continent = fct_recode(country, "Asia" = "Afghanistan", "Africa" = "Angola", "Europe" = "Albania", "Asia" = "UAE", 
   "South America" = "Argentina", "Europe" = "Armenia", "North America" = "Antigua and Barbuda", 
   "Australia" = "Australia", "Europe" = "Austria", "Asia" = "Azerbaijan", "Africa" = "Burundi", 
   "Europe" = "Belgium", "Africa" = "Benin", "Africa" = "Burkina Faso", "Asia" = "Bangladesh", 
@@ -120,58 +108,107 @@ school_fertility_df <- school_fertility_df |>
   "North America" = "Haiti", "Europe" = "Hungary", "Asia" = "Indonesia", "Asia" = "India", 
   "Europe" = "Ireland", "Asia" = "Iran", "Asia" = "Iraq", "Asia" = "Israel", "Europe" = "Italy", 
   "North America" = "Jamaica", "Asia" = "Jordan", "Asia" = "Japan", "Asia" = "Kazakhstan", "Africa" = "Kenya", 
-  "Asia" = "Kyrgyz Republic", "Asia" = "Cambodia", "Oceania" = "Kiribati", "Asia" = "South Korea", 
+  "Asia" = "Kyrgyz Republic", "Asia" = "Cambodia", "Australia" = "Kiribati", "Asia" = "South Korea", 
   "Asia" = "Kuwait", "Asia" = "Lao", "Asia" = "Lebanon", "Africa" = "Liberia", "North America" = "St. Lucia", 
   "Asia" = "Sri Lanka", "Africa" = "Lesotho", "Europe" = "Lithuania", "Europe" = "Luxembourg", 
   "Europe" = "Latvia", "Africa" = "Morocco", "Europe" = "Moldova", "Africa" = "Madagascar", 
-  "Asia" = "Maldives", "North America" = "Mexico", "Oceania" = "Marshall Islands", "Europe" = "North Macedonia", 
+  "Asia" = "Maldives", "North America" = "Mexico", "Australia" = "Marshall Islands", "Europe" = "North Macedonia", 
   "Africa" = "Mali", "Asia" = "Myanmar", "Europe" = "Montenegro", "Asia" = "Mongolia", 
   "Africa" = "Mozambique", "Africa" = "Mauritania", "Africa" = "Mauritius", "Africa" = "Malawi", 
   "Asia" = "Malaysia", "Africa" = "Namibia", "Africa" = "Niger", "Africa" = "Nigeria", 
   "North America" = "Nicaragua", "Europe" = "Netherlands", "Europe" = "Norway", "Asia" = "Nepal", 
-  "Oceania" = "New Zealand", "Asia" = "Oman", "Asia" = "Pakistan", "North America" = "Panama", 
-  "South America" = "Peru", "Asia" = "Philippines", "Oceania" = "Papua New Guinea", "Europe" = "Poland", 
+  "Australia" = "New Zealand", "Asia" = "Oman", "Asia" = "Pakistan", "North America" = "Panama", 
+  "South America" = "Peru", "Asia" = "Philippines", "Australia" = "Papua New Guinea", "Europe" = "Poland", 
   "Europe" = "Portugal", "South America" = "Paraguay", "Asia" = "Palestine", "Asia" = "Qatar", 
   "Europe" = "Romania", "Europe" = "Russia", "Africa" = "Rwanda", "Asia" = "Saudi Arabia", "Africa" = "Sudan", 
-  "Africa" = "Senegal", "Asia" = "Singapore", "Oceania" = "Solomon Islands", "Africa" = "Sierra Leone", 
+  "Africa" = "Senegal", "Asia" = "Singapore", "Australia" = "Solomon Islands", "Africa" = "Sierra Leone", 
   "North America" = "El Salvador", "Africa" = "Somalia", "Europe" = "Serbia", "Africa" = "Sao Tome and Principe", 
   "South America" = "Suriname", "Europe" = "Slovak Republic", "Europe" = "Slovenia", "Europe" = "Sweden", 
   "Africa" = "Eswatini", "Africa" = "Seychelles", "Asia" = "Syria", "Africa" = "Chad", "Africa" = "Togo", 
   "Asia" = "Thailand", "Asia" = "Tajikistan", "Asia" = "Turkmenistan", "Asia" = "Timor-Leste", 
-  "Oceania" = "Tonga", "North America" = "Trinidad and Tobago", "Africa" = "Tunisia", "Asia" = "Turkey", 
+  "Australia" = "Tonga", "North America" = "Trinidad and Tobago", "Africa" = "Tunisia", "Asia" = "Turkey", 
   "Asia" = "Taiwan", "Africa" = "Tanzania", "Africa" = "Uganda", "Europe" = "Ukraine", "South America" = "Uruguay", 
   "North America" = "USA", "Asia" = "Uzbekistan", "South America" = "Venezuela", "Asia" = "Vietnam", 
-  "Oceania" = "Vanuatu", "Oceania" = "Samoa", "Asia" = "Yemen", "Africa" = "South Africa", 
+  "Australia" = "Vanuatu", "Australia" = "Samoa", "Asia" = "Yemen", "Africa" = "South Africa", 
   "Africa" = "Zambia", "Africa" = "Zimbabwe"))
-
 ```
 
 ```{r}
+#DOUBLE CHECK VISUAL (SO MANY POINTS)
 #Visual 1
-
 school_fertility_df |>
   ggplot(aes(x = mean_years_in_school, y = babies_per_woman)) + 
   geom_point(size = 0.1, color = "lightpink", alpha = 0.3) + 
   geom_smooth(method = "lm") +
   labs(x = "Mean Years in School", y = "Babies per Woman",
        title = "Babies per Woman vs. Mean Years in School") 
-```
 
+#OR TO REDUCE # OF POINTS, AVG PER COUNTRY OVER YEAR
+school_fertility_df |>
+  group_by(country, Continent) |>
+  summarize(
+    avg_babies = mean(babies_per_woman),
+    avg_years = mean(mean_years_in_school)) |>
+  ggplot(aes(x = avg_years, y = avg_babies)) + 
+  geom_point(aes(color = Continent), size = 1, alpha = 0.8) + 
+  geom_smooth(method = "lm")
+  labs(x = "Average Mean Years in School", y = "Average Babies per Woman",
+       title = "Average Babies per Woman vs. Average Mean Years in School Across Years for 175 Countries in the World") +
+  scale_x_continuous(breaks = seq(0, 15, by = 3)) +
+  scale_y_continuous(breaks = seq(0, 10, by = 2))
+  
+```
 ```{r}
+#FIX YEAR LABEL
 #Visual 2
 visual_2 <- school_fertility_df |>
   mutate(year = as.numeric(year)) |>
   group_by(year, country) |>
-  ggplot(aes(x = mean_years_in_school, y = babies_per_woman, color = country)) +
-  geom_point(alpha = 0.7, show.legend = FALSE) +
-  facet_wrap(~continent) +
+  ggplot(aes(x = mean_years_in_school, y = babies_per_woman, color = Continent)) +
+  geom_point(alpha = 0.7) +
   labs(title = 'Year: {frame_time}', x = "Mean Years in School", y = "Babies Per Woman") +
   transition_time(year) +
-  ease_aes("linear")
+  ease_aes("linear") +
+scale_x_continuous(breaks = seq(0, 
+15, by = 3)) +
+  scale_y_continuous(breaks = seq(0, 9, by = 1.5))
 
 animation <- animate(visual_2, nframes = 100, fps = 10, renderer = gifski_renderer())
 
 anim_save("fertility_education.gif", animation)
 cat('<img src="fertility_education.gif" alt="Fertility vs Education Animation" />')
+
+```
+
+## 2.2 Linear Regression
+```{r}
+country_summary <- school_fertility_df |>
+  group_by(country) |>
+  summarise(avg_school = mean(mean_years_in_school),
+         avg_babies = mean(babies_per_woman))
+
+lin_reg <- lm(data = country_summary, avg_babies ~ avg_school)
+
+summary_lin_reg <- tidy(lin_reg, conf.int = TRUE)
+summary_lin_reg |>
+  kable(col.names = c("Term", "Estimate", "Std. Error", "Statistic", "P-value", "Conf. Low", "Conf. High"), 
+        caption = "Linear Regression of Average of Babies on Average of Mean Years of Schooling") |>
+  kable_styling(bootstrap_options = c("striped", "hover"))
+```
+
+## 2.3 Model Fit
+```{r}
+#MAKE TITLE BETTER
+#MAKE INTERACTIVE w/ DT PACKAGE?
+var_table <- country_summary |>
+  summarise(
+    var_resp = var(avg_babies, na.rm = TRUE),
+    var_fit = var(fitted(lin_reg), na.rm = TRUE),
+    var_resid = var(residuals(lin_reg), na.rm = TRUE))
+ 
+var_table |>
+kable(col.names = c("Response Variance", "Fitted Values Variance", "Residuals Variance"), 
+        caption = "Variance of Data") |>
+  kable_styling(bootstrap_options = c("striped", "hover"))
 
 ```
