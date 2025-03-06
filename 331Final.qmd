@@ -85,6 +85,21 @@ head(school_fertility_df) |>
 
 We decided to start by using a pivot long to transform the school dataset into the format we want it to be in. This step will allow us to have each year as a row instead of a column, which will make data visualization much easier and will allow us to make GIFs of plots over time. We also have a line of code to clean the year variable. We did the same thing for our babies per woman dataset- pivoting long to make the years rows. Once we cleaned both datasets, we decided to use an inner join because we want to compare relationships between the two variables without missing values- they’d just get in the way. After the join, we have code to make year and country categorical variables- allowing for easier grouping, leading to cleaner visualization. Lastly, we made sure that we had the cleaned dataset in correctly by utilizing kable to view the first few rows.
 
+#########################
+## TO DO FOR PC4
+WRITTEN COMPONENTS:
+1. Present and discuss visualizations of the relationship between the variables.
+2. Describe the statistical method used – linear regression.
+3. Present the estimated regression model (in notation).
+4. Interpret the linear regression coefficients (in context).
+5. Describe the fit of the regression model (both in table and written format).
+
+OTHER:
+- 2.2: Provide interpretations for each of the coefficients in linear regression)
+- 2.2 - Discuss decision of summarizing data so that there is one value per country (took mean over years)
+- 2.3 Discuss the proportion of the variability in the response values that was accounted for by your regression model. What does this suggest about the “quality” of your model?
+#####################
+
 ## 2.1 Data Visualization
 ```{r}
 school_fertility_df <- school_fertility_df |>
@@ -134,16 +149,7 @@ school_fertility_df <- school_fertility_df |>
 ```
 
 ```{r}
-#DOUBLE CHECK VISUAL (SO MANY POINTS)
-#Visual 1
-school_fertility_df |>
-  ggplot(aes(x = mean_years_in_school, y = babies_per_woman)) + 
-  geom_point(size = 0.1, color = "lightpink", alpha = 0.3) + 
-  geom_smooth(method = "lm") +
-  labs(x = "Mean Years in School", y = "Babies per Woman",
-       title = "Babies per Woman vs. Mean Years in School") 
-
-#OR TO REDUCE # OF POINTS, AVG PER COUNTRY OVER YEAR
+#DOUBLE CHECK VISUAL
 school_fertility_df |>
   group_by(country, Continent) |>
   summarize(
@@ -151,8 +157,8 @@ school_fertility_df |>
     avg_years = mean(mean_years_in_school)) |>
   ggplot(aes(x = avg_years, y = avg_babies)) + 
   geom_point(aes(color = Continent), size = 1, alpha = 0.8) + 
-  geom_smooth(method = "lm")
-  labs(x = "Average Mean Years in School", y = "Average Babies per Woman",
+  geom_smooth(method = "lm") +
+  labs(x = "Average Mean Years in School", y = "", subtitle = "Average Babies per Woman",
        title = "Average Babies per Woman vs. Average Mean Years in School Across Years for 175 Countries in the World") +
   scale_x_continuous(breaks = seq(0, 15, by = 3)) +
   scale_y_continuous(breaks = seq(0, 10, by = 2))
@@ -160,20 +166,22 @@ school_fertility_df |>
 ```
 ```{r}
 #FIX YEAR LABEL
+#GET RID OF GRAY FOR LINE
 #Visual 2
 visual_2 <- school_fertility_df |>
   mutate(year = as.numeric(year)) |>
   group_by(year, country) |>
-  ggplot(aes(x = mean_years_in_school, y = babies_per_woman, color = Continent)) +
-  geom_point(alpha = 0.7) +
-  labs(title = 'Year: {frame_time}', x = "Mean Years in School", y = "Babies Per Woman") +
-  transition_time(year) +
+  ggplot(aes(x = mean_years_in_school, y = babies_per_woman)) +
+  geom_point(aes(color = Continent), alpha = 0.7) +
+  geom_smooth(method = "lm") +
+  labs(title = 'Babies Per Woman vs. Mean Years in School by Continent for 175 Countries in Year {closest_state}', x = "Mean Years in School", y = "", subtitle = "Babies Per Woman") +
+  transition_states(as.factor(year), transition_length = 1, state_length = 1) +
   ease_aes("linear") +
 scale_x_continuous(breaks = seq(0, 
 15, by = 3)) +
   scale_y_continuous(breaks = seq(0, 9, by = 1.5))
 
-animation <- animate(visual_2, nframes = 100, fps = 10, renderer = gifski_renderer())
+animation <- animate(visual_2, nframes = 100, fps = 10, renderer = gifski_renderer(), width = 600, height = 500)
 
 anim_save("fertility_education.gif", animation)
 cat('<img src="fertility_education.gif" alt="Fertility vs Education Animation" />')
