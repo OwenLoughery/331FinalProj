@@ -237,7 +237,6 @@ summary_lin_reg |>
   )
 
 ```
-##Regression Model in Notaiton
 
 Expected Average Babies Per Women = 7.09 - 0.46(Average Years of School) 
 
@@ -246,8 +245,6 @@ Intercept: If a given country’s women in a given year have 0 average years in 
 
 ## 2.3 Model Fit
 ```{r}
-#MAKE TITLE BETTER
-#MAKE INTERACTIVE w/ DT PACKAGE?
 var_table <- country_summary |>
   summarise(
     var_resp = var(avg_babies, na.rm = TRUE),
