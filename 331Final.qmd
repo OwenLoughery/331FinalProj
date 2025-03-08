@@ -280,3 +280,5 @@ var_table |>
 
 
 ```
+
+Our total response variance is 3.321. This is broken up into two components, fitted values variance and residuals variance. Our fitted values variance is 2.475 and our residuals variance is .846. We can see that 74.53% of our variation is accounted for by our regression model, making our R^2 value .7453: This indicates that we have a quite good quality model- to find this high of an R^2 value indicates that these two variables are correlated heavily, whether it be due to causation or other lurking variables.
