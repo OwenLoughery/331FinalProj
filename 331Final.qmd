@@ -24,6 +24,7 @@ library(gganimate)
 library(gifski)
 library(broom)
 library(kableExtra)
+library(gt)
 ```
 
 Reading in Data Sets:
@@ -149,7 +150,6 @@ school_fertility_df <- school_fertility_df |>
 ```
 
 ```{r}
-#DOUBLE CHECK VISUAL
 school_fertility_df |>
   group_by(country, Continent) |>
   summarize(
@@ -176,14 +176,12 @@ school_fertility_df |>
   
 ```
 ## Scatterplot Interpretation
-We decided to create a scatterplot to visualize the potential relationship between Mean Years in School and Babies per Woman. It looks as if Mean Years in School and Babies per Woman have a strong negative linear correlation, that is, if a country has more mean years in school, we’d expect the average babies per woman of that country in that given year to be lower. As for the different Continents, Africa tends to have the highest number of babies per women and lowest average years in school while Europe has the highest average years in school and lowest babies per women.
+We decided to create a scatterplot to visualize the potential relationship between the Mean Years in School and Babies per Woman. It looks as if Mean Years in School and Babies per Woman have a strong negative linear correlation, that is, if a country has more mean years in school, we’d expect the average babies per woman of that country in that given year to be lower. As for the different Continents, Africa tends to have the highest number of babies per women and lowest average years in school while Europe has the highest average years in school and lowest babies per women.
 
 ```{r}
-#FIX YEAR LABEL
-#GET RID OF GRAY FOR LINE
 #Visual 2
 visual_2 <- school_fertility_df |>
-  mutate(year = as.numeric(year)) |>
+  mutate(year = as.numeric(as.character(year))) |>
   group_by(year, country) |>
   ggplot(aes(x = mean_years_in_school, y = babies_per_woman)) +
   geom_point(aes(color = Continent), alpha = 0.7) +
@@ -211,6 +209,7 @@ anim_save("fertility_education.gif", animation)
 cat('<img src="fertility_education.gif" alt="Fertility vs Education Animation" />')
 
 ```
+
 This Gif shows the same linear relationship as our stagnant graph above for all time. Over time, the slope of our association becomes less steep and there appears to be a decrease in overall babies per women over time.
 
 ## 2.2 Linear Regression
@@ -226,9 +225,36 @@ lin_reg <- lm(data = country_summary, avg_babies ~ avg_school)
 
 summary_lin_reg <- tidy(lin_reg, conf.int = TRUE)
 summary_lin_reg |>
-  kable(col.names = c("Term", "Estimate", "Std. Error", "Statistic", "P-value", "Conf. Low", "Conf. High"), 
-        caption = "Linear Regression of Average of Babies on Average of Mean Years of Schooling") |>
-  kable_styling(bootstrap_options = c("striped", "hover"))
+  gt() |>
+  cols_label(
+    term = "Term",
+    estimate = "Estimate",
+    std.error = "Std. Error",
+    statistic = "T-Statistic",
+    p.value = "P-Value",
+    conf.low = "Conf. Low",
+    conf.high = "Conf. High"
+  ) |>
+  fmt_number(
+    columns = c(estimate, std.error, statistic, p.value, conf.low, conf.high),
+    decimals = 3
+  ) |>
+  tab_header(
+    title = "Linear Regression of Babies per Woman on Mean Years of Schooling",
+    subtitle = "Regression results with confidence intervals"
+  ) |>
+  tab_options(
+    table.font.size = px(14),
+    heading.title.font.size = px(18),
+    heading.subtitle.font.size = px(16),
+    column_labels.font.weight = "bold"
+  ) |>
+  fmt_scientific(columns = p.value, decimals = 3) |> 
+  tab_style(
+    style = list(cell_borders(sides = "all", color = "gray70", weight = px(1))),
+    locations = cells_body()
+  )
+
 ```
 ##Regression Model in Notaiton
 
@@ -248,8 +274,25 @@ var_table <- country_summary |>
     var_resid = var(residuals(lin_reg), na.rm = TRUE))
  
 var_table |>
-kable(col.names = c("Response Variance", "Fitted Values Variance", "Residuals Variance"), 
-        caption = "Variance of Data") |>
-  kable_styling(bootstrap_options = c("striped", "hover"))
+  gt() |>
+  tab_header(
+    title = "Variance Decomposition of Linear Regression",
+    subtitle = "Breakdown of response, fitted values, and residual variances"
+  ) |>
+  fmt_number(
+    columns = everything(),
+    decimals = 3
+  ) |>
+  tab_options(
+    table.font.size = px(14),
+    heading.title.font.size = px(18),
+    heading.subtitle.font.size = px(16),
+    column_labels.font.weight = "bold"
+  ) |>
+  tab_style(
+    style = list(cell_borders(sides = "all", color = "gray70", weight = px(1))),
+    locations = cells_body()
+  )
+
 
 ```
