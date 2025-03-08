@@ -187,7 +187,8 @@ scale_x_continuous(breaks = seq(0,
 animation <- animate(visual_2, nframes = 100, fps = 10, renderer = gifski_renderer(), width = 600, height = 500)
 
 anim_save("fertility_education.gif", animation)
-cat('<img src="fertility_education.gif" alt="Fertility vs Education Animation" />')
+
+knitr::include_graphics("fertility_education.gif")
 
 ```
 
