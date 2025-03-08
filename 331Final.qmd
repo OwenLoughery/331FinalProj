@@ -72,34 +72,15 @@ fertility <- fertility |> #Cleaning fertility df
 school_fertility_df <- school |> #Joining two data sets
   inner_join(fertility, #Using inner join because we want to compare relationship between the two variables so do not want missing values
              by = c("country", "year"))
-fertility
 
 school_fertility_df <- school_fertility_df |> #making year and country as categorical variables
   mutate(year = fct(year),
          country = fct(country))
-
-head(school_fertility_df) |>
-  kable()
 ```
 
 **Data Cleaning Process and Decisions:**
 
 We decided to start by using a pivot long to transform the school dataset into the format we want it to be in. This step will allow us to have each year as a row instead of a column, which will make data visualization much easier and will allow us to make GIFs of plots over time. We also have a line of code to clean the year variable. We did the same thing for our babies per woman dataset- pivoting long to make the years rows. Once we cleaned both datasets, we decided to use an inner join because we want to compare relationships between the two variables without missing values- they’d just get in the way. After the join, we have code to make year and country categorical variables- allowing for easier grouping, leading to cleaner visualization. Lastly, we made sure that we had the cleaned dataset in correctly by utilizing kable to view the first few rows.
-
-#########################
-## TO DO FOR PC4
-WRITTEN COMPONENTS:
-1. Present and discuss visualizations of the relationship between the variables.
-2. Describe the statistical method used – linear regression.
-3. Present the estimated regression model (in notation).
-4. Interpret the linear regression coefficients (in context).
-5. Describe the fit of the regression model (both in table and written format).
-
-OTHER:
-- 2.2: Provide interpretations for each of the coefficients in linear regression)
-- 2.2 - Discuss decision of summarizing data so that there is one value per country (took mean over years)
-- 2.3 Discuss the proportion of the variability in the response values that was accounted for by your regression model. What does this suggest about the “quality” of your model?
-#####################
 
 ## 2.1 Data Visualization
 ```{r}
