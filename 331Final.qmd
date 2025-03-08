@@ -175,6 +175,9 @@ school_fertility_df |>
 
   
 ```
+## Scatterplot Interpretation
+We decided to create a scatterplot to visualize the potential relationship between Mean Years in School and Babies per Woman. It looks as if Mean Years in School and Babies per Woman have a strong negative linear correlation, that is, if a country has more mean years in school, we’d expect the average babies per woman of that country in that given year to be lower. As for the different Continents, Africa tends to have the highest number of babies per women and lowest average years in school while Europe has the highest average years in school and lowest babies per women.
+
 ```{r}
 #FIX YEAR LABEL
 #GET RID OF GRAY FOR LINE
@@ -208,8 +211,11 @@ anim_save("fertility_education.gif", animation)
 cat('<img src="fertility_education.gif" alt="Fertility vs Education Animation" />')
 
 ```
+This Gif shows the same linear relationship as our stagnant graph above for all time. Over time, the slope of our association becomes less steep and there appears to be a decrease in overall babies per women over time.
 
 ## 2.2 Linear Regression
+When we visualize two quantitative variables pitted against each other in a scatterplot, we can impose a line of best fit, allowing us to perform a linear regression. In this dataset, we can see that the line of best fit has a negative slope, supporting our aforementioned hypothesis of a negative relationship between the two variables. Another key component of the line of best fit is the y-intercept: in this model, if a given country’s women in a given year have 0 average years in school, we’d expect the amount of babies per woman to be the y-intercept of the graph.
+
 ```{r}
 country_summary <- school_fertility_df |>
   group_by(country) |>
@@ -224,6 +230,12 @@ summary_lin_reg |>
         caption = "Linear Regression of Average of Babies on Average of Mean Years of Schooling") |>
   kable_styling(bootstrap_options = c("striped", "hover"))
 ```
+##Regression Model in Notaiton
+
+Expected Average Babies Per Women = 7.09 - 0.46(Average Years of School) 
+
+Slope: For every increase in one year of school babies per woman is expected to decrease by 0.46 babies on average. 
+Intercept: If a given country’s women in a given year have 0 average years in school, we’d expect the amount of babies per woman in that year to be aproximatley 7, even though this may not be a meaningful value.
 
 ## 2.3 Model Fit
 ```{r}
