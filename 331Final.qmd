@@ -283,6 +283,11 @@ var_table |>
     columns = everything(),
     decimals = 3
   ) |>
+  cols_label(
+    var_resp = "Response Variance",
+    var_fit = "Fitted Values Variance",
+    var_resid = "Residuals Variance"
+  ) |>
   tab_options(
     table.font.size = px(14),
     heading.title.font.size = px(18),
