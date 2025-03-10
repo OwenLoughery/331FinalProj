@@ -312,3 +312,25 @@ full_data |>
   labs(x = "Simulated Number of Babies", y = "", subtitle = "Observed Number of Babies", 
        title = "Simulated Mean Number of Babies vs. Observed Mean Number of Babies")
 ```
+
+## 3.2 Generating Multiple Predictive Checks
+```{r}
+simulation <- function(mod){
+  pred_num_babies <- predict(mod)
+  est_sigma <- sigma(mod)
+  x <- length(pred_num_babies)
+  rand_error <- function(x, mean = 0, sd = est_sigma){
+    error <- rnorm(length(x), mean, sd)
+    x_prime <- x + error
+    return(x_prime)
+  }
+  sim_response <- tibble(sim_num_babies = rand_error(pred_num_babies, sd = est_sigma))
+  return(sim_response)
+}
+
+lin_reg <- lm(data = full_data, avg_babies ~ sim_num_babies)
+threetwolin_reg <- tidy(lin_reg, conf.int = TRUE)
+print(threetwolin_reg)
+
+```
+
