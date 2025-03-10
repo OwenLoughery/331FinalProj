@@ -159,7 +159,7 @@ school_fertility_df |>
 ## Scatterplot Interpretation
 We decided to create a scatterplot to visualize the potential relationship between the Mean Years in School and Babies per Woman. It looks as if Mean Years in School and Babies per Woman have a strong negative linear correlation, that is, if a country has more mean years in school, we’d expect the average babies per woman of that country in that given year to be lower. As for the different Continents, Africa tends to have the highest number of babies per women and lowest average years in school while Europe has the highest average years in school and lowest babies per women.
 
-```{r}
+```{r, eval = FALSE}
 #Visual 2
 visual_2 <- school_fertility_df |>
   mutate(year = as.numeric(as.character(year))) |>
@@ -346,3 +346,23 @@ full_data |>
 
 
 ## 3.2 Generating Multiple Predictive Checks
+```{r}
+simulation <- function(mod){
+  pred_num_babies <- predict(mod)
+  est_sigma <- sigma(mod)
+  x <- length(pred_num_babies)
+  rand_error <- function(x, mean = 0, sd = est_sigma){
+    error <- rnorm(length(x), mean, sd)
+    x_prime <- x + error
+    return(x_prime)
+  }
+  sim_response <- tibble(sim_num_babies = rand_error(pred_num_babies, sd = est_sigma))
+  return(sim_response)
+}
+
+lin_reg <- lm(data = full_data, avg_babies ~ sim_num_babies)
+threetwolin_reg <- tidy(lin_reg, conf.int = TRUE)
+print(threetwolin_reg)
+
+```
+
