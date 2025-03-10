@@ -242,6 +242,7 @@ summary_lin_reg |>
 Expected Average Babies Per Women = 7.09 - 0.46(Average Years of School) 
 
 Slope: For every increase in one year of school babies per woman is expected to decrease by 0.46 babies on average. 
+
 Intercept: If a given country’s women in a given year have 0 average years in school, we’d expect the amount of babies per woman in that year to be approximately 7, even though this may not be a meaningful value.
 
 ## 2.3 Model Fit
@@ -282,3 +283,32 @@ var_table |>
 ```
 
 Our total response variance is 3.321. This is broken up into two components, fitted values variance and residuals variance. Our fitted values variance is 2.475 and our residuals variance is .846. We can see that 74.53% of our variation is accounted for by our regression model, making our R^2 value .7453: This indicates that we have a quite good quality model- to find this high of an R^2 value indicates that these two variables are correlated heavily, whether it be due to causation or other lurking variables.
+
+## 3.1 Visualizing Simulations from the Model
+```{r}
+pred_num_babies <- predict(lin_reg)
+est_sigma <- sigma(lin_reg)
+
+rand_error <- function(x, mean = 0, sd){
+  
+  error <- rnorm(length(x), mean, sd)
+  x_prime <- x + error
+  return(x_prime)
+
+}
+
+set.seed(123)
+sim_response <- tibble(sim_num_babies = rand_error(pred_num_babies, sd = est_sigma))
+
+full_data <- country_summary |> 
+  select(avg_school, avg_babies) |> 
+  bind_cols(sim_response)
+
+full_data |>
+  ggplot(aes(x = sim_num_babies, y = avg_babies)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0, 
+              linetype = "dashed", color = "magenta") +
+  labs(x = "Simulated Number of Babies", y = "", subtitle = "Observed Number of Babies", 
+       title = "Simulated Mean Number of Babies vs. Observed Mean Number of Babies")
+```
