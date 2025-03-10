@@ -306,9 +306,43 @@ full_data <- country_summary |>
 
 full_data |>
   ggplot(aes(x = sim_num_babies, y = avg_babies)) +
-  geom_point() +
+  geom_point(alpha = 0.6, size = 0.7) +
+  geom_smooth(method = "lm", se = FALSE) +
   geom_abline(slope = 1, intercept = 0, 
-              linetype = "dashed", color = "magenta") +
-  labs(x = "Simulated Number of Babies", y = "", subtitle = "Observed Number of Babies", 
-       title = "Simulated Mean Number of Babies vs. Observed Mean Number of Babies")
+              linetype = "dashed", color = "red") +
+  labs(x = "Simulated Mean Number of Babies", y = "", subtitle = "Observed Mean Number of Babies", 
+       title = "Simulated Mean Number of Babies vs. Observed Mean Number of Babies Per Woman Across 175 Countries in the World") +
+  scale_x_continuous(breaks = seq(0, 
+10, by = 2)) +
+  scale_y_continuous(breaks = seq(0, 10, by = 2))
 ```
+
+Theoretically, if the simulated data were exactly the same as the observed data, the relationship would be modeled by the line y = x. We can see that the fitted (blue) linear regression line is approximately the line y = x (red). Thus, while they are not exactly the same, the simulated values for mean number of babies are similar to the observed values for mean number of babies. 
+
+```{r}
+#OBSERVED MEAN NUMBER OF BABIES VS. AVG MEAN YEARS IN SCHOOL
+full_data |>
+  ggplot(aes(x = avg_school, y = avg_babies)) +
+  geom_point(alpha = 0.6, size = 0.7) +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(x = "Average Mean Years in School", y = "", subtitle = "Observed Mean Number of Babies Per Woman", 
+       title = "Observed Mean Number of Babies Per Woman vs. Average Mean Years in School Across 175 Countries in the World") +
+  scale_x_continuous(breaks = seq(0, 
+15, by = 3)) +
+  scale_y_continuous(breaks = seq(0, 15, by = 3))
+
+
+#SIMULATED MEAN NUMBER OF BABIES VS. AVG MEAN YEARS IN SCHOOL
+full_data |>
+  ggplot(aes(x = avg_school, y = sim_num_babies)) +
+  geom_point(alpha = 0.6, size = 0.7) +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(x = "Average Mean Years in School", y = "", subtitle = "Simulated Mean Number of Babies Per Woman", 
+       title = "Simulated Mean Number of Babies Per Woman vs. Average Mean Years in School Across 175 Countries in the World") +
+  scale_x_continuous(breaks = seq(0, 
+15, by = 3)) +
+  scale_y_continuous(breaks = seq(0, 15, by = 3))
+```
+
+
+## 3.2 Generating Multiple Predictive Checks
