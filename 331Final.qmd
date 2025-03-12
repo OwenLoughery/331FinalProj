@@ -348,22 +348,38 @@ full_data |>
 
 ## 3.2 Generating Multiple Predictive Checks
 ```{r}
-simulation <- function(mod){
-  pred_num_babies <- predict(mod)
-  est_sigma <- sigma(mod)
-  x <- length(pred_num_babies)
-  rand_error <- function(x, mean = 0, sd = est_sigma){
+simulation <- function(mod) {
+  pred_num_babies <- predict(mod) # Using the predict on the mod to generate simulated response values
+  est_sigma <- sigma(mod) # Defining the standard deviation of our predicted model
+  
+  rand_error <- function(x, mean = 0, sd = est_sigma) {
     error <- rnorm(length(x), mean, sd)
     x_prime <- x + error
-    return(x_prime)
+    return(x_prime) # Code from 3.1 to generate a function that applies random error to response values
   }
-  sim_response <- tibble(sim_num_babies = rand_error(pred_num_babies, sd = est_sigma))
-  return(sim_response)
+  
+  sim_response <- rand_error(pred_num_babies, sd = est_sigma) # Making a numeric vector of all of our response values
+  return(sim_response)  # Return numeric vector 
 }
 
-lin_reg <- lm(data = full_data, avg_babies ~ sim_num_babies)
-threetwolin_reg <- tidy(lin_reg, conf.int = TRUE)
-print(threetwolin_reg)
+set.seed(123) # Set same seed as above
+num_simulations <- 1000
+
+simulated_datasets <- map(1:num_simulations, ~ simulation(lin_reg)) # Make 1000 simulated datasets
+
+rsquareds <- map_dbl(simulated_datasets, function(sim_data) {
+  sim_df <- tibble(avg_babies = country_summary$avg_babies, sim_num_babies = sim_data) |>
+    drop_na() # Creating a dataframe to be able to compare observed and simulated values and dropping NA's
+  reg <- lm(avg_babies ~ sim_num_babies, data = sim_df) # Run a regression on each simulated dataset
+  summary(reg)$r.squared # Extracting R-squared
+})
+
+# Plot the distribution of Rsquared values
+ggplot(tibble(Rsquared = rsquareds), aes(x = Rsquared)) +
+  geom_histogram(bins = 40, fill = "purple", alpha = 0.6) +
+  labs(title = "Distribution of R-squared Values from Simulated Regressions",
+       x = "R-squared Values",
+       y = "Frequency")
 
 ```
-
+Our simulated R^2 values seem to follow a normal distribution, being centered at .55. This means that our simulated data, on average, has 55% of the variability in babies per woman being explained by the variability in mean years in school. Since our actual R^2 value in our observed data was .7453, we can say that our simulated model does not fully capture the relationship between the two variables in our dataset. 
