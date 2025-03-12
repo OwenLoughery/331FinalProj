@@ -156,7 +156,6 @@ school_fertility_df |>
 
   
 ```
-## Scatterplot Interpretation
 We decided to create a scatterplot to visualize the potential relationship between the Mean Years in School and Babies per Woman. It looks as if Mean Years in School and Babies per Woman have a strong negative linear correlation, that is, if a country has more mean years in school, we’d expect the average babies per woman of that country in that given year to be lower. As for the different Continents, Africa tends to have the highest number of babies per women and lowest average years in school while Europe has the highest average years in school and lowest babies per women.
 
 ```{r, eval = FALSE}
@@ -317,7 +316,9 @@ full_data |>
   scale_y_continuous(breaks = seq(0, 10, by = 2))
 ```
 
-Theoretically, if the simulated data were exactly the same as the observed data, the relationship would be modeled by the line y = x. We can see that the fitted (blue) linear regression line is approximately the line y = x (red). Thus, while they are not exactly the same, the simulated values for mean number of babies are similar to the observed values for mean number of babies. 
+Theoretically, if the simulated data were exactly the same as the observed data, the relationship would be modeled by the line y = x. We can see that the fitted (blue) linear regression line is approximately the line y = x (red). Thus, we can conclude that the simulated values for mean number of babies are similar to the observed values for mean number of babies. 
+
+Below are the individual side-by-side plots of the simulated vs. the observed data.
 
 ```{r}
 #OBSERVED MEAN NUMBER OF BABIES VS. AVG MEAN YEARS IN SCHOOL
