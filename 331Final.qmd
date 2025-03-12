@@ -1,5 +1,5 @@
 ---
-title: "Intercourse )`: Intelligence (:"
+title: "More books, less babies?"
 subtitle: "A rigorous statistical analysis on mean years in school vs. babies per woman (ages 15-44)"
 author: "Owen Loughery, Lenka Masic, Catherine Mispagel, Owen Gresko"
 format: 
@@ -25,7 +25,7 @@ insert intro stuff
 
 #### Background
 
-The two variables we have chosen to explore from GapMinder are babies per woman, found in the child_per_women_total_fertility data set, and the mean years in school (women ages 15-44), found in the mean_years_in_school_women_of_reproductive_age_15_to_44 data set. We are curious to see how mean years in school compares to the number of children women have across the world. The babies per woman variable is the number of children that would be born to a woman should she live through her childbearing years and bear children in accordance with age-specific fertility rates of the specified year. Overall, it is the statistical indicator of total fertility rate (GapMinder). The mean years in school variable is the average number of years of school attended by women of reproductive age, ages 15-44. Schooling that is accounted for in the years includes primary, secondary, and tertiary education (GapMinder). Data is taken across years in both data sets including 175 countries in the years in school school data set and 197 countries in the children per woman data set. Data contain no missing values, however, the data sets do not include the same observations (i.e. countries) and the same range of years.
+The two variables we have chosen to explore from GapMinder are babies per woman and mean years in school (women ages 15-44). We are curious to see how mean years in school compares to the number of children women have across the world. The babies per woman variable is the number of children that would be born to a woman should she live through her childbearing years and bear children in accordance with age-specific fertility rates of the specified year. Overall, it is the statistical indicator of total fertility rate (GapMinder). The mean years in school variable is the average number of years of school attended by women of reproductive age, ages 15-44. Schooling that is accounted for in the years includes primary, secondary, and tertiary education (GapMinder). Data is taken across years in both data sets including 175 countries in the years in school school data set and 197 countries in the children per woman data set. Data contain no missing values, however, the data sets do not include the same observations (i.e. countries) and the same range of years.
 
 #### **Hypothesized Relationships of Variables** 
 
