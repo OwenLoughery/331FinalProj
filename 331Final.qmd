@@ -1,5 +1,5 @@
 ---
-title: "More books, less babies?"
+title: "More Books, Less Babies?"
 subtitle: "A rigorous statistical analysis on mean years in school vs. babies per woman (ages 15-44)"
 author: "Owen Loughery, Lenka Masic, Catherine Mispagel, Owen Gresko"
 format: 
