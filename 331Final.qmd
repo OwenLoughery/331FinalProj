@@ -19,7 +19,12 @@ execute:
 
 ### Introduction
 
-insert intro stuff
+Over the last 100 years global fertility rates have undergone dramatic changes, influenced by shifting economic conditions, advancements in healthcare, and educational access. There have been many studies on the effect of female education on fertility rates that suggest that women who receive more education tend to have fewer children. Education can increase knowledge about birth control and reproductive health as well as open doors to career opportunities. 
+
+In this study, we explore the relationship between mean years of schooling for women aged 15-44 and the total fertility rate(babies per woman) using data from GapMinder. By analyzing data from over 175 countries across multiple years, we aim to determine the strength and direction of this relationship. We hypothesize that as education increases, the total fertility rate will decrease as many similar studies have observed in the past. 
+
+Throughout this study we will use data visualization, linear regression modeling, and simulation-based predictive modeling to analyze the relationship. 
+
 
 ### The Data & Variables of Interest
 
