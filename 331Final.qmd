@@ -16,7 +16,6 @@ execute:
   warning: false
 ---
 
-
 ```{r}
 library(tidyverse)
 library(knitr)
@@ -56,6 +55,7 @@ school <- school |> #Cleaning school df
 ```
 
 ## 1.2 Pivot Longer
+
 ```{r}
 
 fertility <- fertility |> #Cleaning fertility df
@@ -68,6 +68,7 @@ fertility <- fertility |> #Cleaning fertility df
 ```
 
 ## 1.3 Joining Datasets
+
 ```{r}
 school_fertility_df <- school |> #Joining two data sets
   inner_join(fertility, #Using inner join because we want to compare relationship between the two variables so do not want missing values
@@ -83,6 +84,7 @@ school_fertility_df <- school_fertility_df |> #making year and country as catego
 We decided to start by using a pivot long to transform the school dataset into the format we want it to be in. This step will allow us to have each year as a row instead of a column, which will make data visualization much easier and will allow us to make GIFs of plots over time. We also have a line of code to clean the year variable. We did the same thing for our babies per woman dataset- pivoting long to make the years rows. Once we cleaned both datasets, we decided to use an inner join because we want to compare relationships between the two variables without missing values- they’d just get in the way. After the join, we have code to make year and country categorical variables- allowing for easier grouping, leading to cleaner visualization. Lastly, we made sure that we had the cleaned dataset in correctly by utilizing kable to view the first few rows.
 
 ## 2.1 Data Visualization
+
 ```{r}
 school_fertility_df <- school_fertility_df |>
   mutate(Continent = fct_recode(country, "Asia" = "Afghanistan", "Africa" = "Angola", "Europe" = "Albania", "Asia" = "UAE", 
@@ -156,6 +158,7 @@ school_fertility_df |>
 
   
 ```
+
 We decided to create a scatterplot to visualize the potential relationship between the Mean Years in School and Babies per Woman. It looks as if Mean Years in School and Babies per Woman have a strong negative linear correlation, that is, if a country has more mean years in school, we’d expect the average babies per woman of that country in that given year to be lower. As for the different Continents, Africa tends to have the highest number of babies per women and lowest average years in school while Europe has the highest average years in school and lowest babies per women.
 
 ```{r, eval = FALSE}
@@ -194,6 +197,7 @@ knitr::include_graphics("fertility_education.gif")
 This Gif shows the same linear relationship as our stagnant graph above for all time. Over time, the slope of our association becomes less steep and there appears to be a decrease in overall babies per women over time.
 
 ## 2.2 Linear Regression
+
 When we visualize two quantitative variables pitted against each other in a scatterplot, we can impose a line of best fit, allowing us to perform a linear regression. In this dataset, we can see that the line of best fit has a negative slope, supporting our aforementioned hypothesis of a negative relationship between the two variables. Another key component of the line of best fit is the y-intercept: in this model, if a given country’s women in a given year have 0 average years in school, we’d expect the amount of babies per woman to be the y-intercept of the graph.
 
 ```{r}
@@ -238,13 +242,14 @@ summary_lin_reg |>
 
 ```
 
-Expected Average Babies Per Women = 7.09 - 0.46(Average Years of School) 
+Expected Average Babies Per Women = 7.09 - 0.46(Average Years of School)
 
-Slope: For every increase in one year of school babies per woman is expected to decrease by 0.46 babies on average. 
+Slope: For every increase in one year of school babies per woman is expected to decrease by 0.46 babies on average.
 
 Intercept: If a given country’s women in a given year have 0 average years in school, we’d expect the amount of babies per woman in that year to be approximately 7, even though this may not be a meaningful value.
 
 ## 2.3 Model Fit
+
 ```{r}
 var_table <- country_summary |>
   summarise(
@@ -281,9 +286,10 @@ var_table |>
 
 ```
 
-Our total response variance is 3.321. This is broken up into two components, fitted values variance and residuals variance. Our fitted values variance is 2.475 and our residuals variance is .846. We can see that 74.53% of our variation is accounted for by our regression model, making our R^2 value .7453: This indicates that we have a quite good quality model- to find this high of an R^2 value indicates that these two variables are correlated heavily, whether it be due to causation or other lurking variables.
+Our total response variance is 3.321. This is broken up into two components, fitted values variance and residuals variance. Our fitted values variance is 2.475 and our residuals variance is .846. We can see that 74.53% of our variation is accounted for by our regression model, making our R\^2 value .7453: This indicates that we have a quite good quality model- to find this high of an R\^2 value indicates that these two variables are correlated heavily, whether it be due to causation or other lurking variables.
 
 ## 3.1 Visualizing Simulations from the Model
+
 ```{r}
 pred_num_babies <- predict(lin_reg)
 est_sigma <- sigma(lin_reg)
@@ -317,7 +323,7 @@ full_data |>
   theme_bw()
 ```
 
-Theoretically, if the simulated data were exactly the same as the observed data, the relationship would be modeled by the line y = x. We can see that the fitted (blue) linear regression line is approximately the line y = x (red). Thus, we can conclude that the simulated values for mean number of babies are similar to the observed values for mean number of babies. 
+Theoretically, if the simulated data were exactly the same as the observed data, the relationship would be modeled by the line y = x. We can see that the fitted (blue) linear regression line is approximately the line y = x (red). Thus, we can conclude that the simulated values for mean number of babies are similar to the observed values for mean number of babies.
 
 Below are the individual side-by-side plots of the simulated vs. the observed data.
 
@@ -348,8 +354,8 @@ full_data |>
   theme_bw()
 ```
 
-
 ## 3.2 Generating Multiple Predictive Checks
+
 ```{r}
 simulation <- function(mod) {
   pred_num_babies <- predict(mod) # Using the predict on the mod to generate simulated response values
@@ -386,4 +392,15 @@ ggplot(tibble(Rsquared = rsquareds), aes(x = Rsquared)) +
   theme_bw()
 
 ```
-Our simulated R^2 values seem to follow a normal distribution, being centered at .55. This means that our simulated data, on average, has 55% of the variability in babies per woman being explained by the variability in mean years in school. Since our actual R^2 value in our observed data was .7453, we can say that our simulated model does not fully capture the relationship between the two variables in our dataset. 
+
+Our simulated R\^2 values seem to follow a normal distribution, being centered at .55. This means that our simulated data, on average, has 55% of the variability in babies per woman being explained by the variability in mean years in school. Since our actual R\^2 value in our observed data was .7453, we can say that our simulated model does not fully capture the relationship between the two variables in our dataset.
+
+## Conclusion and Key Takeaways:
+
+Our analysis of the relationship between mean years of schooling for women aged 15-44 and babies per woman (total fertility rate) across 175 countries strongly supports our initial hypothesis. Through data visualization and statistical modeling, we observed a strong negative correlation between these two variables, suggesting that as the average years of schooling for women increases, the fertility rate tends to decrease.
+
+The scatter plot and animated visualization confirmed this trend over time, showing that countries with higher education levels for women consistently have lower fertility rates. Additionally, our linear regression model estimated that for every additional year of schooling, the expected number of children per woman decreases by approximately 0.46 children. The model’s R² value of 0.7453 indicates that nearly 75% of the variability in fertility rates can be explained by differences in educational attainment.
+
+However, our predictive checks and simulations suggest that while education is a significant factor, there are likely other contributing influences—such as economic conditions, cultural norms, access to healthcare, and governmental policies—that also impact fertility rates. Our simulated models had an average R² value of 0.55, meaning that while education remains a key explanatory variable, additional factors need to be explored for a more comprehensive understanding.
+
+Overall, this study reinforces the importance of education in shaping demographic and societal trends. As countries continue to invest in education—particularly for women—they may also experience shifts in population growth patterns, economic development, and gender equality.
