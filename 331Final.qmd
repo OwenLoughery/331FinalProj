@@ -1,5 +1,6 @@
 ---
-title: "331Final"
+title: "Intercourse )`: Intelligence (:"
+subtitle: "A rigorous statistical analysis on mean years in school vs. babies per woman (ages 15-44)"
 author: "Owen Loughery, Lenka Masic, Catherine Mispagel, Owen Gresko"
 format: 
   html:
