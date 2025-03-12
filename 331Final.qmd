@@ -313,7 +313,8 @@ full_data |>
        title = "Simulated Mean Number of Babies vs. Observed Mean Number of Babies Per Woman Across 175 Countries in the World") +
   scale_x_continuous(breaks = seq(0, 
 10, by = 2)) +
-  scale_y_continuous(breaks = seq(0, 10, by = 2))
+  scale_y_continuous(breaks = seq(0, 10, by = 2)) +
+  theme_bw()
 ```
 
 Theoretically, if the simulated data were exactly the same as the observed data, the relationship would be modeled by the line y = x. We can see that the fitted (blue) linear regression line is approximately the line y = x (red). Thus, we can conclude that the simulated values for mean number of babies are similar to the observed values for mean number of babies. 
@@ -330,7 +331,8 @@ full_data |>
        title = "Observed Mean Number of Babies Per Woman vs. Average Mean Years in School Across 175 Countries in the World") +
   scale_x_continuous(breaks = seq(0, 
 15, by = 3)) +
-  scale_y_continuous(breaks = seq(0, 15, by = 3))
+  scale_y_continuous(breaks = seq(0, 15, by = 3)) +
+  theme_bw()
 
 
 #SIMULATED MEAN NUMBER OF BABIES VS. AVG MEAN YEARS IN SCHOOL
@@ -342,7 +344,8 @@ full_data |>
        title = "Simulated Mean Number of Babies Per Woman vs. Average Mean Years in School Across 175 Countries in the World") +
   scale_x_continuous(breaks = seq(0, 
 15, by = 3)) +
-  scale_y_continuous(breaks = seq(0, 15, by = 3))
+  scale_y_continuous(breaks = seq(0, 15, by = 3)) +
+  theme_bw()
 ```
 
 
@@ -379,7 +382,8 @@ ggplot(tibble(Rsquared = rsquareds), aes(x = Rsquared)) +
   geom_histogram(bins = 40, fill = "purple", alpha = 0.6) +
   labs(title = "Distribution of R-squared Values from Simulated Regressions",
        x = "R-squared Values",
-       y = "Frequency")
+       y = "Frequency") +
+  theme_bw()
 
 ```
 Our simulated R^2 values seem to follow a normal distribution, being centered at .55. This means that our simulated data, on average, has 55% of the variability in babies per woman being explained by the variability in mean years in school. Since our actual R^2 value in our observed data was .7453, we can say that our simulated model does not fully capture the relationship between the two variables in our dataset. 
