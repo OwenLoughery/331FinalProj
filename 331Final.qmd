@@ -324,7 +324,7 @@ var_table |>
 
 ```
 
-Our total response variance is 3.321. This is broken up into two components, fitted values variance and residuals variance. Our fitted values variance is 2.475 and our residuals variance is .846. We can see that 74.53% of our variation is accounted for by our regression model, making our R\^2 value .7453: This indicates that we have a quite good quality model- to find this high of an R\^2 value indicates that these two variables are correlated heavily, whether it be due to causation or other lurking variables.
+Our total response variance is 3.321. This is broken up into two components, fitted values variance and residuals variance. Our fitted values variance is 2.475 and our residuals variance is .846. We can see that 74.53% of our variation is accounted for by our regression model, making our R² value .7453: This indicates that we have a quite good quality model- to find this high of an R² value indicates that these two variables are correlated heavily, whether it be due to causation or other lurking variables.
 
 
 ### Comparing Observed Data to Simulated Data
@@ -437,7 +437,7 @@ ggplot(tibble(Rsquared = rsquareds), aes(x = Rsquared)) +
 
 ```
 
-Our simulated R\^2 values seem to follow a normal distribution, being centered at .55. This means that our simulated data, on average, has 55% of the variability in babies per woman being explained by the variability in mean years in school. Since our actual R\^2 value in our observed data was .7453, we can say that our simulated model does not fully capture the relationship between the two variables in our dataset.
+Our simulated R² values seem to follow a normal distribution, being centered at .55. This means that our simulated data, on average, has 55% of the variability in babies per woman being explained by the variability in mean years in school. Since our actual R² value in our observed data was .7453, we can say that our simulated model does not fully capture the relationship between the two variables in our dataset.
 
 ## Conclusion and Key Takeaways:
 
