@@ -161,7 +161,6 @@ school_fertility_df |>
   
 ```
 
-
 It looks as if Mean Years in School and Babies per Woman have a strong negative linear correlation, that is, if a country has more mean years in school, we'd expect the average babies per woman of that country in that given year to be lower. As for the different Continents, Africa tends to have the highest number of babies per women and lowest average years in school while Europe has the highest average years in school and lowest babies per women.
 
 #### Animated Visual of Babies per Woman vs. Mean Years in School Over the Years
