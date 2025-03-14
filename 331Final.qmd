@@ -16,31 +16,9 @@ execute:
   message: false
   warning: false
 ---
-
-### Introduction
-
-Over the last 100 years global fertility rates have undergone dramatic changes, influenced by shifting economic conditions, advancements in healthcare, and educational access. There have been many studies on the effect of female education on fertility rates that suggest that women who receive more education tend to have fewer children. Education can increase knowledge about birth control and reproductive health as well as open doors to career opportunities. 
-
-In this study, we explore the relationship between mean years of schooling for women aged 15-44 and the total fertility rate(babies per woman) using data from GapMinder. By analyzing data from over 175 countries across multiple years, we aim to determine the strength and direction of this relationship. We hypothesize that as education increases, the total fertility rate will decrease as many similar studies have observed in the past. 
-
-Throughout this study we will use data visualization, linear regression modeling, and simulation-based predictive modeling to analyze the relationship. 
-
-
-### The Data & Variables of Interest
-
-#### Background
-
-The two variables we have chosen to explore from GapMinder are babies per woman and mean years in school (women ages 15-44). We are curious to see how mean years in school compares to the number of children women have across the world. The babies per woman variable is the number of children that would be born to a woman should she live through her childbearing years and bear children in accordance with age-specific fertility rates of the specified year. Overall, it is the statistical indicator of total fertility rate (GapMinder). The mean years in school variable is the average number of years of school attended by women of reproductive age, ages 15-44. Schooling that is accounted for in the years includes primary, secondary, and tertiary education (GapMinder). Data is taken across years in both data sets including 175 countries in the years in school school data set and 197 countries in the children per woman data set. Data contain no missing values, however, the data sets do not include the same observations (i.e. countries) and the same range of years.
-
-#### **Hypothesized Relationships of Variables** 
-
-We expect the hypothesized relationship between mean years of schooling for women aged 15-44 and babies per woman (total fertility rate) to be strongly negative. We believe that an increase in years of schooling will be associated with a decrease in the amount of children per woman. With increased education, women are better informed on birth control and other contraception methods. Additionally, schools often provide resources such as birth control, meaning women who have been to school have had greater access to resources. An education also opens up career opportunities for women. Women who have developed careers often have less time to have children in their child bearing years. Lastly, cultural differences also affect the total fertility rate. Areas and countries where women don't typically receive an education or much schooling tend to have gender roles that depict women as mothers before all else, which could encourage more births.
-
 ### Data Cleaning
 
 In order to follow through with the data analysis, it is necessary to clean the data sets. The process is outlined below.
-
-#### Reading in Packages
 
 ```{r}
 library(tidyverse)
@@ -50,20 +28,10 @@ library(gifski)
 library(broom)
 library(kableExtra)
 library(gt)
-```
 
-#### Reading in Data
-
-```{r}
 fertility <- read.csv("children_per_woman_total_fertility.csv")
 school <- read.csv("mean_years_in_school_women_of_reproductive_age_15_to_44.csv")
-```
 
-#### Pivoting and Join Data
-
-We decided to start by using a pivot long to transform the school dataset into the format we want it to be in. This step will allow us to have each year as a row instead of a column, which will make data visualization much easier and will allow us to make GIFs of plots over time. We also have a line of code to clean the year variable. We did the same thing for our babies per woman dataset- pivoting long to make the years rows.
-
-```{r}
 school <- school |> #Cleaning school df
   pivot_longer( #pivoting long to make years as rows instead of columns
     cols = starts_with("X"),
@@ -71,12 +39,6 @@ school <- school |> #Cleaning school df
     values_to = "mean_years_in_school"
   ) |>
   mutate(year = str_remove(year, "X")) #cleaning year variable
-```
-
-
-
-
-```{r}
 
 fertility <- fertility |> #Cleaning fertility df
   pivot_longer( #pivoting long to make years as rows instead of columns
@@ -85,13 +47,7 @@ fertility <- fertility |> #Cleaning fertility df
     values_to = "babies_per_woman"
   ) |>
   mutate(year = str_remove(year, "X"))  #cleaning year variable
-```
 
-
-Once we cleaned both datasets, we decided to use an inner join because we want to compare relationships between the two variables without missing values- they'd just get in the way. After the join, we have code to make year and country categorical variables- allowing for easier grouping, leading to cleaner visualization. Lastly, we made sure that we had the cleaned dataset in correctly by utilizing kable to view the first few rows.
-
-
-```{r}
 school_fertility_df <- school |> #Joining two data sets
   inner_join(fertility, #Using inner join because we want to compare relationship between the two variables so do not want missing values
              by = c("country", "year"))
@@ -99,14 +55,7 @@ school_fertility_df <- school |> #Joining two data sets
 school_fertility_df <- school_fertility_df |> #making year and country as categorical variables
   mutate(year = fct(year),
          country = fct(country))
-```
 
-### Visualizing the Data
-
-We decided to start by using a pivot long to transform the school dataset into the format we want it to be in. This step will allow us to have each year as a row instead of a column, which will make data visualization much easier and will allow us to make GIFs of plots over time. We also have a line of code to clean the year variable. We did the same thing for our babies per woman dataset- pivoting long to make the years rows. Once we cleaned both datasets, we decided to use an inner join because we want to compare relationships between the two variables without missing values- they’d just get in the way. After the join, we have code to make year and country categorical variables- allowing for easier grouping, leading to cleaner visualization. Lastly, we made sure that we had the cleaned dataset in correctly by utilizing kable to view the first few rows.
-
-
-```{r}
 school_fertility_df <- school_fertility_df |>
   mutate(Continent = fct_recode(country, "Asia" = "Afghanistan", "Africa" = "Angola", "Europe" = "Albania", "Asia" = "UAE", 
   "South America" = "Argentina", "Europe" = "Armenia", "North America" = "Antigua and Barbuda", 
@@ -152,6 +101,35 @@ school_fertility_df <- school_fertility_df |>
   "Australia" = "Vanuatu", "Australia" = "Samoa", "Asia" = "Yemen", "Africa" = "South Africa", 
   "Africa" = "Zambia", "Africa" = "Zimbabwe"))
 ```
+
+
+We decided to start by using a pivot long to transform the school dataset into the format we want it to be in. This step will allow us to have each year as a row instead of a column, which will make data visualization much easier and will allow us to make GIFs of plots over time. We also have a line of code to clean the year variable. We did the same thing for our babies per woman dataset- pivoting long to make the years rows.
+
+Once we cleaned both datasets, we decided to use an inner join because we want to compare relationships between the two variables without missing values- they'd just get in the way. After the join, we have code to make year and country categorical variables- allowing for easier grouping, leading to cleaner visualization. Lastly, we made sure that we had the cleaned dataset in correctly by utilizing kable to view the first few rows.
+
+### Introduction
+
+Over the last 100 years global fertility rates have undergone dramatic changes, influenced by shifting economic conditions, advancements in healthcare, and educational access. There have been many studies on the effect of female education on fertility rates that suggest that women who receive more education tend to have fewer children. Education can increase knowledge about birth control and reproductive health as well as open doors to career opportunities. 
+
+In this study, we explore the relationship between mean years of schooling for women aged 15-44 and the total fertility rate(babies per woman) using data from GapMinder. By analyzing data from over 175 countries across multiple years, we aim to determine the strength and direction of this relationship. We hypothesize that as education increases, the total fertility rate will decrease as many similar studies have observed in the past. 
+
+Throughout this study we will use data visualization, linear regression modeling, and simulation-based predictive modeling to analyze the relationship. 
+
+
+### The Data & Variables of Interest
+
+#### Background
+
+The two variables we have chosen to explore from GapMinder are babies per woman and mean years in school (women ages 15-44). We are curious to see how mean years in school compares to the number of children women have across the world. The babies per woman variable is the number of children that would be born to a woman should she live through her childbearing years and bear children in accordance with age-specific fertility rates of the specified year. Overall, it is the statistical indicator of total fertility rate (GapMinder). The mean years in school variable is the average number of years of school attended by women of reproductive age, ages 15-44. Schooling that is accounted for in the years includes primary, secondary, and tertiary education (GapMinder). Data is taken across years in both data sets including 175 countries in the years in school school data set and 197 countries in the children per woman data set. Data contain no missing values, however, the data sets do not include the same observations (i.e. countries) and the same range of years.
+
+#### Hypothesized Relationships of Variables
+
+We expect the hypothesized relationship between mean years of schooling for women aged 15-44 and babies per woman (total fertility rate) to be strongly negative. We believe that an increase in years of schooling will be associated with a decrease in the amount of children per woman. With increased education, women are better informed on birth control and other contraception methods. Additionally, schools often provide resources such as birth control, meaning women who have been to school have had greater access to resources. An education also opens up career opportunities for women. Women who have developed careers often have less time to have children in their child bearing years. Lastly, cultural differences also affect the total fertility rate. Areas and countries where women don't typically receive an education or much schooling tend to have gender roles that depict women as mothers before all else, which could encourage more births.
+
+
+### Visualizing the Data
+
+We decided to start by using a pivot long to transform the school dataset into the format we want it to be in. This step will allow us to have each year as a row instead of a column, which will make data visualization much easier and will allow us to make GIFs of plots over time. We also have a line of code to clean the year variable. We did the same thing for our babies per woman dataset- pivoting long to make the years rows. Once we cleaned both datasets, we decided to use an inner join because we want to compare relationships between the two variables without missing values- they’d just get in the way. After the join, we have code to make year and country categorical variables- allowing for easier grouping, leading to cleaner visualization. Lastly, we made sure that we had the cleaned dataset in correctly by utilizing kable to view the first few rows.
 
 #### Scatterplot Comparing Babies Per Woman vs. Mean Years in School
 
