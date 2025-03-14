@@ -133,7 +133,7 @@ We expect the hypothesized relationship between mean years of schooling for wome
 We decided to start by using a pivot long to transform the school dataset into the format we want it to be in. This step will allow us to have each year as a row instead of a column, which will make data visualization much easier and will allow us to make GIFs of plots over time. We also have a line of code to clean the year variable. We did the same thing for our babies per woman dataset- pivoting long to make the years rows. Once we cleaned both datasets, we decided to use an inner join because we want to compare relationships between the two variables without missing values- they’d just get in the way. After the join, we have code to make year and country categorical variables- allowing for easier grouping, leading to cleaner visualization. Lastly, we made sure that we had the cleaned dataset in correctly by utilizing kable to view the first few rows.
 
 #### Scatterplot Comparing Babies Per Woman vs. Mean Years in School
-
+We decided to create a scatterplot to visualize the potential relationship between the Mean Years in School and Babies per Woman. 
 ```{r}
 school_fertility_df |>
   group_by(country, Continent) |>
@@ -141,7 +141,7 @@ school_fertility_df |>
     avg_babies = mean(babies_per_woman),
     avg_years = mean(mean_years_in_school)) |>
   ggplot(aes(x = avg_years, y = avg_babies)) + 
-  geom_point(aes(color = Continent), size = 1, alpha = 0.8) + 
+  geom_point(aes(color = Continent), size = 1.2, alpha = 1.2) + 
   geom_smooth(method = "lm", se = FALSE, aes(color = "Linear Fit for All Countries")) +
   labs(x = "Average Mean Years in School", y = "", subtitle = "Average Babies per Woman",
        title = "Average Babies per Woman vs. Average Mean Years in School Across Years for 175 Countries in the World") +
@@ -162,7 +162,7 @@ school_fertility_df |>
 ```
 
 
-We decided to create a scatterplot to visualize the potential relationship between the Mean Years in School and Babies per Woman. It looks as if Mean Years in School and Babies per Woman have a strong negative linear correlation, that is, if a country has more mean years in school, we'd expect the average babies per woman of that country in that given year to be lower. As for the different Continents, Africa tends to have the highest number of babies per women and lowest average years in school while Europe has the highest average years in school and lowest babies per women.
+It looks as if Mean Years in School and Babies per Woman have a strong negative linear correlation, that is, if a country has more mean years in school, we'd expect the average babies per woman of that country in that given year to be lower. As for the different Continents, Africa tends to have the highest number of babies per women and lowest average years in school while Europe has the highest average years in school and lowest babies per women.
 
 #### Animated Visual of Babies per Woman vs. Mean Years in School Over the Years
 
@@ -325,7 +325,7 @@ full_data <- country_summary |>
 
 full_data |>
   ggplot(aes(x = sim_num_babies, y = avg_babies)) +
-  geom_point(alpha = 0.6, size = 0.7) +
+  geom_point(alpha = 0.6, size = 1.2) +
   geom_smooth(method = "lm", se = FALSE) +
   geom_abline(slope = 1, intercept = 0, 
               linetype = "dashed", color = "red") +
@@ -345,7 +345,7 @@ Below are the individual side-by-side plots of the simulated vs. the observed da
 #OBSERVED MEAN NUMBER OF BABIES VS. AVG MEAN YEARS IN SCHOOL
 full_data |>
   ggplot(aes(x = avg_school, y = avg_babies)) +
-  geom_point(alpha = 0.6, size = 0.7) +
+  geom_point(alpha = 0.6, size = 1.2) +
   geom_smooth(method = "lm", se = FALSE) +
   labs(x = "Average Mean Years in School", y = "", subtitle = "Observed Mean Number of Babies Per Woman", 
        title = "Observed Mean Number of Babies Per Woman vs. Average Mean Years in School Across 175 Countries in the World") +
@@ -358,7 +358,7 @@ full_data |>
 #SIMULATED MEAN NUMBER OF BABIES VS. AVG MEAN YEARS IN SCHOOL
 full_data |>
   ggplot(aes(x = avg_school, y = sim_num_babies)) +
-  geom_point(alpha = 0.6, size = 0.7) +
+  geom_point(alpha = 0.6, size = 1.2) +
   geom_smooth(method = "lm", se = FALSE) +
   labs(x = "Average Mean Years in School", y = "", subtitle = "Simulated Mean Number of Babies Per Woman", 
        title = "Simulated Mean Number of Babies Per Woman vs. Average Mean Years in School Across 175 Countries in the World") +
