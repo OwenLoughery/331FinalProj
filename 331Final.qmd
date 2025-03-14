@@ -33,6 +33,8 @@ library(gifski)
 library(broom)
 library(kableExtra)
 library(gt)
+library(patchwork)
+
 
 fertility <- read.csv("children_per_woman_total_fertility.csv")
 school <- read.csv("mean_years_in_school_women_of_reproductive_age_15_to_44.csv")
@@ -105,7 +107,10 @@ school_fertility_df <- school_fertility_df |>
   "North America" = "USA", "Asia" = "Uzbekistan", "South America" = "Venezuela", "Asia" = "Vietnam", 
   "Australia" = "Vanuatu", "Australia" = "Samoa", "Asia" = "Yemen", "Africa" = "South Africa", 
   "Africa" = "Zambia", "Africa" = "Zimbabwe"))
+
+#In order to create the factor continent by faceting countries, we referred to www.state.gov/countries-and-areas-list/. The citation can be found in the references section below. 
 ```
+
 
 
 We decided to start by using a pivot long to transform the school dataset into the format we want it to be in. This step will allow us to have each year as a row instead of a column, which will make data visualization much easier and will allow us to make GIFs of plots over time. We also have a line of code to clean the year variable. We did the same thing for our babies per woman dataset- pivoting long to make the years rows.
@@ -145,7 +150,7 @@ school_fertility_df |>
     avg_babies = mean(babies_per_woman),
     avg_years = mean(mean_years_in_school)) |>
   ggplot(aes(x = avg_years, y = avg_babies)) + 
-  geom_point(aes(color = Continent), size = 1.2, alpha = 1.2) + 
+  geom_point(aes(color = Continent), size = 1.5, alpha = 1.2) + 
   geom_smooth(method = "lm", se = FALSE, aes(color = "Linear Fit for All Countries")) +
   labs(x = "Average Mean Years in School", y = "", subtitle = "Average Babies per Woman",
        title = "Average Babies per Woman vs. Average Mean Years in School Across Years for 175 Countries in the World") +
@@ -165,7 +170,21 @@ school_fertility_df |>
   
 ```
 
-It looks as if Mean Years in School and Babies per Woman have a strong negative linear correlation, that is, if a country has more mean years in school, we'd expect the average babies per woman of that country in that given year to be lower. As for the different Continents, Africa tends to have the highest number of babies per women and lowest average years in school while Europe has the highest average years in school and lowest babies per women.
+
+::: callout-note
+
+Colors are chosen to be color-blind friendly. Each color represents a continent.
+
+:::
+
+Each point in the scatterplot above represents a Country, which is colored by continent (shown by color). The position of the point is determined by aggregating the mean years in school and the number of babies per woman aggregated over years. It looks as if Mean Years in School and Babies per Woman have a strong negative linear correlation, that is, if a country has more mean years in school, we'd expect the average babies per woman of that country in that given year to be lower. As for the different Continents, Africa tends to have the highest number of babies per women and lowest average years in school while Europe has the highest average years in school and lowest babies per women.
+
+::: callout-note
+
+This is the plot for the data that will be used in the coming actual regression model. Reminder, data was aggregated by finding the average mean years in school across all years for each country and the average number of babies per woman across all years for each country.
+:::
+
+
 
 #### Animated Visual of Babies per Woman vs. Mean Years in School Over the Years
 
@@ -176,7 +195,7 @@ visual_2 <- school_fertility_df |>
   mutate(year = as.numeric(as.character(year))) |>
   group_by(year, country) |>
   ggplot(aes(x = mean_years_in_school, y = babies_per_woman)) +
-  geom_point(aes(color = Continent), alpha = 0.7) +
+  geom_point(aes(color = Continent), alpha = 1, size = 1.5) +
   geom_smooth(method = "lm", se = FALSE, aes(color = "Linear Fit for All Countries")) +
   scale_color_manual(values = c(
   "Linear Fit for All Countries" = "black", 
@@ -206,11 +225,12 @@ knitr::include_graphics("fertility_education.gif")
 This Gif shows the same linear relationship as our stagnant graph above for all time. Over time, the slope of our association becomes less steep and there appears to be a decrease in overall babies per women over time.
 
 
+
 ### Analyzing the Relationship - Linear Regression
 
 #### Modeling Babies per Woman on Mean Years in School
 
-When we visualize two quantitative variables pitted against each other in a scatterplot, we can impose a line of best fit, allowing us to perform a linear regression. In this dataset, we can see that the line of best fit has a negative slope, supporting our aforementioned hypothesis of a negative relationship between the two variables. Another key component of the line of best fit is the y-intercept: in this model, if a given country's women in a given year have 0 average years in school, we'd expect the amount of babies per woman to be the y-intercept of the graph.
+When we visualize two quantitative variables with a scatterplot, we can perform a linear regression, and view the overall trend of our data with a line of best fit. In this dataset, we can see that the line of best fit has a negative slope, supporting our aforementioned hypothesis of a negative relationship between the two variables. Another key component of the line of best fit is the y-intercept: in this model, if a given country's women in a given year have 0 average years in school, we'd expect the amount of babies per woman to be the y-intercept of the graph.
 
 
 ```{r}
@@ -258,9 +278,13 @@ summary_lin_reg |>
 
 **Expected Average Babies Per Women** = 7.09 - 0.46(Average Years of School)
 
-**Slope:** For every increase in one year of school babies per woman is expected to decrease by 0.46 babies on average.
+**Slope:** For every increase in one year of school, babies per woman is expected to decrease by 0.46 babies on average.
 
 **Intercept:** If a given country's women in a given year have 0 average years in school, we'd expect the amount of babies per woman in that year to be approximately 7, even though this may not be a meaningful value.
+
+
+Based on the regression above and the parameter estimates, the slope is estimated to be 0.46. This means that for every increase in one year of school, babies per woman  is expected to decrease by 0.46 babies on average. Additionally, with an estimated intercept value of 7.09, for a given women in a country in a given year with 0 average years in school, the expected number of babies per woman in that year is 7.09, approximately 7.
+
 
 #### Analyzing the Model Fit
 
@@ -328,7 +352,7 @@ full_data <- country_summary |>
 
 full_data |>
   ggplot(aes(x = sim_num_babies, y = avg_babies)) +
-  geom_point(alpha = 0.6, size = 1.2) +
+  geom_point(alpha = 0.6, size = 1.5) +
   geom_smooth(method = "lm", se = FALSE) +
   geom_abline(slope = 1, intercept = 0, 
               linetype = "dashed", color = "red") +
@@ -346,9 +370,9 @@ Below are the individual side-by-side plots of the simulated vs. the observed da
 
 ```{r}
 #OBSERVED MEAN NUMBER OF BABIES VS. AVG MEAN YEARS IN SCHOOL
-full_data |>
+obs_visual <- full_data |>
   ggplot(aes(x = avg_school, y = avg_babies)) +
-  geom_point(alpha = 0.6, size = 1.2) +
+  geom_point(alpha = 0.6, size = 1.5) +
   geom_smooth(method = "lm", se = FALSE) +
   labs(x = "Average Mean Years in School", y = "", subtitle = "Observed Mean Number of Babies Per Woman", 
        title = "Observed Mean Number of Babies Per Woman vs. Average Mean Years in School Across 175 Countries in the World") +
@@ -359,9 +383,9 @@ full_data |>
 
 
 #SIMULATED MEAN NUMBER OF BABIES VS. AVG MEAN YEARS IN SCHOOL
-full_data |>
+sim_visual <- full_data |>
   ggplot(aes(x = avg_school, y = sim_num_babies)) +
-  geom_point(alpha = 0.6, size = 1.2) +
+  geom_point(alpha = 0.6, size = 1.5) +
   geom_smooth(method = "lm", se = FALSE) +
   labs(x = "Average Mean Years in School", y = "", subtitle = "Simulated Mean Number of Babies Per Woman", 
        title = "Simulated Mean Number of Babies Per Woman vs. Average Mean Years in School Across 175 Countries in the World") +
@@ -369,6 +393,8 @@ full_data |>
 15, by = 3)) +
   scale_y_continuous(breaks = seq(0, 15, by = 3)) +
   theme_bw()
+
+obs_visual + sim_visual
 ```
 
 #### Performing Predictive Checks
@@ -422,3 +448,7 @@ The scatter plot and animated visualization confirmed this trend over time, show
 However, our predictive checks and simulations suggest that while education is a significant factor, there are likely other contributing influences—such as economic conditions, cultural norms, access to healthcare, and governmental policies—that also impact fertility rates. Our simulated models had an average R² value of 0.55, meaning that while education remains a key explanatory variable, additional factors need to be explored for a more comprehensive understanding.
 
 Overall, this study reinforces the importance of education in shaping demographic and societal trends. As countries continue to invest in education—particularly for women—they may also experience shifts in population growth patterns, economic development, and gender equality.
+
+## References
+
+“Countries and Areas.” U.S. Department of State, U.S. Department of State, www.state.gov/countries-and-areas-list/. Accessed 14 Mar. 2025.
