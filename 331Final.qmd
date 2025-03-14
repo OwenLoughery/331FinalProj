@@ -17,6 +17,10 @@ execute:
   message: false
   warning: false
 ---
+
+<img src="Gemini_Generated_Image_hllc2nhllc2nhllc.jpeg" width="300">
+<img src="4C133BE2-4825-4A69-AE81-4A9E961E501C.png" width="300">
+
 ### Data Cleaning
 
 In order to follow through with the data analysis, it is necessary to clean the data sets. The process is outlined below.
