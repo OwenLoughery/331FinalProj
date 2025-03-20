@@ -112,37 +112,34 @@ school_fertility_df <- school_fertility_df |>
 ```
 
 
+To allow for the appropriate analysis across both data sets, data was first pivoted to a longer format. This step will allow us to have each year as a row instead of a column, which will make data visualization much easier and will allow us to make animated visuals of plots over time. The same data cleaning process was performed on the data set for babies per woman, creating two identically formatted data sets. 
 
-We decided to start by using a pivot long to transform the school dataset into the format we want it to be in. This step will allow us to have each year as a row instead of a column, which will make data visualization much easier and will allow us to make GIFs of plots over time. We also have a line of code to clean the year variable. We did the same thing for our babies per woman dataset- pivoting long to make the years rows.
-
-Once we cleaned both datasets, we decided to use an inner join because we want to compare relationships between the two variables without missing values- they'd just get in the way. After the join, we have code to make year and country categorical variables- allowing for easier grouping, leading to cleaner visualization. Lastly, we made sure that we had the cleaned dataset in correctly by utilizing kable to view the first few rows.
+Once we cleaned both data sets, data sets were joined to combine matching values in both data sets since the interest of the analysis is to compare the relationship between the two variables ensuring there was data for each observation. Next, variables for year and country were made categorical, allowing for easier grouping and leading to cleaner visualization.
 
 ### Introduction
 
 Over the last 100 years global fertility rates have undergone dramatic changes, influenced by shifting economic conditions, advancements in healthcare, and educational access. There have been many studies on the effect of female education on fertility rates that suggest that women who receive more education tend to have fewer children. Education can increase knowledge about birth control and reproductive health as well as open doors to career opportunities. 
 
-In this study, we explore the relationship between mean years of schooling for women aged 15-44 and the total fertility rate(babies per woman) using data from GapMinder. By analyzing data from over 175 countries across multiple years, we aim to determine the strength and direction of this relationship. We hypothesize that as education increases, the total fertility rate will decrease as many similar studies have observed in the past. 
+In this study, we explore the relationship between mean years of schooling for women aged 15-44 and the total fertility rate (expressed as babies per woman) using data from **GapMinder**. By analyzing data from over 175 countries across multiple years, we aim to determine the strength and direction of this relationship across an extensive timeline and geographic regions. It is hypothesized that as education increases, the total fertility rate will decrease as many similar studies have observed in the past. 
 
-Throughout this study we will use data visualization, linear regression modeling, and simulation-based predictive modeling to analyze the relationship. 
+Throughout this study, we will use data visualization, linear regression modeling, and simulation-based predictive modeling to analyze the relationship between fertility rate and years in school of women, examining form, direction, and validity of our model. 
 
 
 ### The Data & Variables of Interest
 
 #### Background
 
-The two variables we have chosen to explore from GapMinder are babies per woman and mean years in school (women ages 15-44). We are curious to see how mean years in school compares to the number of children women have across the world. The babies per woman variable is the number of children that would be born to a woman should she live through her childbearing years and bear children in accordance with age-specific fertility rates of the specified year. Overall, it is the statistical indicator of total fertility rate (GapMinder). The mean years in school variable is the average number of years of school attended by women of reproductive age, ages 15-44. Schooling that is accounted for in the years includes primary, secondary, and tertiary education (GapMinder). Data is taken across years in both data sets including 175 countries in the years in school school data set and 197 countries in the children per woman data set. Data contain no missing values, however, the data sets do not include the same observations (i.e. countries) and the same range of years.
+The two variables of interest to explore from GapMinder are the number of babies per woman and the mean years in school (women ages 15-44). We are curious to see how mean years in school compares to the number of children women have across the world. The babies per woman variable is the number of children that would be born to a woman should she live through her childbearing years and bear children in accordance with age-specific fertility rates of the specified year. Overall, it is the statistical indicator of total fertility rate (GapMinder). The mean years in school variable is the average number of years of school attended by women of reproductive age, ages 15-44. Schooling that is accounted for in the years includes primary, secondary, and tertiary education (GapMinder). Data is taken across years in both data sets including 175 countries in the years in school school data set and 197 countries in the children per woman data set. Data contain no missing values, however, the data sets do not include the same observations (i.e. countries) and the same range of years.
 
 #### Hypothesized Relationships of Variables
 
-We expect the hypothesized relationship between mean years of schooling for women aged 15-44 and babies per woman (total fertility rate) to be strongly negative. We believe that an increase in years of schooling will be associated with a decrease in the amount of children per woman. With increased education, women are better informed on birth control and other contraception methods. Additionally, schools often provide resources such as birth control, meaning women who have been to school have had greater access to resources. An education also opens up career opportunities for women. Women who have developed careers often have less time to have children in their child bearing years. Lastly, cultural differences also affect the total fertility rate. Areas and countries where women don't typically receive an education or much schooling tend to have gender roles that depict women as mothers before all else, which could encourage more births.
+We expect the relationship between mean years of schooling for women aged 15-44 and babies per woman (total fertility rate) to be strongly negative. We believe that an increase in years of schooling will be associated with a decrease in the amount of children per woman. With increased education, women are better informed on birth control and other contraception methods. Additionally, schools often provide resources such as birth control, meaning women who have been to school have had greater access to resources. An education also opens up career opportunities for women. Women who have developed careers often have less time to have children in their child bearing years. Lastly, cultural differences also affect the total fertility rate. Areas and countries where women don't typically receive an education or much schooling tend to have gender roles that depict women as mothers before all else, which could encourage more births. Ultimately, there are many factors which indicate that the relationship between the number of babies per woman and the mean years in school is an inverse relationship.
 
 
 ### Visualizing the Data
 
-We decided to start by using a pivot long to transform the school dataset into the format we want it to be in. This step will allow us to have each year as a row instead of a column, which will make data visualization much easier and will allow us to make GIFs of plots over time. We also have a line of code to clean the year variable. We did the same thing for our babies per woman dataset- pivoting long to make the years rows. Once we cleaned both datasets, we decided to use an inner join because we want to compare relationships between the two variables without missing values- they’d just get in the way. After the join, we have code to make year and country categorical variables- allowing for easier grouping, leading to cleaner visualization. Lastly, we made sure that we had the cleaned dataset in correctly by utilizing kable to view the first few rows.
-
 #### Scatterplot Comparing Babies Per Woman vs. Mean Years in School
-We decided to create a scatterplot to visualize the potential relationship between the Mean Years in School and Babies per Woman. 
+First, we decided to create a scatter plot to visualize the potential relationship between the mean years in school and the number of babies per woman. The visual can be observed below.
 ```{r}
 school_fertility_df |>
   group_by(country, Continent) |>
@@ -153,7 +150,8 @@ school_fertility_df |>
   geom_point(aes(color = Continent), size = 1.5, alpha = 1.2) + 
   geom_smooth(method = "lm", se = FALSE, aes(color = "Linear Fit for All Countries")) +
   labs(x = "Average Mean Years in School", y = "", subtitle = "Average Babies per Woman",
-       title = "Average Babies per Woman vs. Average Mean Years in School Across Years for 175 Countries in the World") +
+       title = "Average Babies per Woman vs. Average Mean Years in School Across Years 
+for 175 Countries in the World") +
   scale_x_continuous(breaks = seq(0, 15, by = 3)) +
   scale_y_continuous(breaks = seq(0, 10, by = 2)) +
   scale_color_manual(values = c(
@@ -177,7 +175,7 @@ Colors are chosen to be color-blind friendly. Each color represents a continent.
 
 :::
 
-Each point in the scatterplot above represents a Country, which is colored by continent (shown by color). The position of the point is determined by aggregating the mean years in school and the number of babies per woman aggregated over years. It looks as if Mean Years in School and Babies per Woman have a strong negative linear correlation, that is, if a country has more mean years in school, we'd expect the average babies per woman of that country in that given year to be lower. As for the different Continents, Africa tends to have the highest number of babies per women and lowest average years in school while Europe has the highest average years in school and lowest babies per women.
+Each point in the scatter plot above represents a country, which is categorized by continent (shown by color). The point's position is based on the average years of schooling and the number of babies per woman, aggregated over years. Visually, it appears as though there is a strong negative linear correlation between the mean years in school and the number of babies per woman. That is, if a country has more mean years in school, it is expected that the average babies per woman of that country in that given year is lower. As for the different continents, Africa tends to have the highest number of babies per woman and lowest average years in school, while Europe has the highest average years in school and lowest babies per women.
 
 ::: callout-note
 
@@ -189,7 +187,7 @@ This is the plot for the data that will be used in the coming actual regression 
 #### Animated Visual of Babies per Woman vs. Mean Years in School Over the Years
 
 
-```{r, eval = FALSE}
+```{r}
 #Visual 2
 visual_2 <- school_fertility_df |>
   mutate(year = as.numeric(as.character(year))) |>
@@ -222,7 +220,7 @@ knitr::include_graphics("fertility_education.gif")
 
 ```
 
-This Gif shows the same linear relationship as our stagnant graph above for all time. Over time, the slope of our association becomes less steep and there appears to be a decrease in overall babies per women over time.
+This GIF demonstrates the same linear relationship as the scatter plot above aggregated over the years 1970 to 2009. Over time, the slope of the association becomes less steep, meaning the observed linear relationship is weakening. Additionally, there appears to be an overall decrease in the number of babies per women over time.
 
 
 
@@ -230,7 +228,7 @@ This Gif shows the same linear relationship as our stagnant graph above for all 
 
 #### Modeling Babies per Woman on Mean Years in School
 
-When we visualize two quantitative variables with a scatterplot, we can perform a linear regression, and view the overall trend of our data with a line of best fit. In this dataset, we can see that the line of best fit has a negative slope, supporting our aforementioned hypothesis of a negative relationship between the two variables. Another key component of the line of best fit is the y-intercept: in this model, if a given country's women in a given year have 0 average years in school, we'd expect the amount of babies per woman to be the y-intercept of the graph.
+After visualizing two quantitative variables with a scatter plot, we can perform a linear regression to view the overall trend of our data with a line of best fit. In this data set, it is seen that the line of best fit has a negative slope, supporting our aforementioned hypothesis of a strong negative linear relationship between the two variables. Another key component of the line of best fit is the y-intercept: in this model, if a given country's women in a given year have 0 average years in school, we'd expect the number of babies per woman to be the y-intercept of the graph.
 
 
 ```{r}
@@ -276,14 +274,9 @@ summary_lin_reg |>
 ```
 
 
-**Expected Average Babies Per Women** = 7.09 - 0.46(Average Years of School)
+**Expected Average Babies Per Women** = 7.09 - 0.466(Average Years of School)
 
-**Slope:** For every increase in one year of school, babies per woman is expected to decrease by 0.46 babies on average.
-
-**Intercept:** If a given country's women in a given year have 0 average years in school, we'd expect the amount of babies per woman in that year to be approximately 7, even though this may not be a meaningful value.
-
-
-Based on the regression above and the parameter estimates, the slope is estimated to be 0.46. This means that for every increase in one year of school, babies per woman  is expected to decrease by 0.46 babies on average. Additionally, with an estimated intercept value of 7.09, for a given women in a country in a given year with 0 average years in school, the expected number of babies per woman in that year is 7.09, approximately 7.
+Based on the regression above and the parameter estimates, the **slope** is estimated to be -0.466. This means that for every increase in one year of school, babies per woman is expected to decrease by 0.466 babies on average. Additionally, the estimated **intercept** value is 7.089 babies per woman. This means if a given country's women in a given year have 0 average years in school, we'd expect the amount of babies per woman in that year to be approximately 7, although this may not be a meaningful or practical value.
 
 
 #### Analyzing the Model Fit
@@ -324,7 +317,7 @@ var_table |>
 
 ```
 
-Our total response variance is 3.321. This is broken up into two components, fitted values variance and residuals variance. Our fitted values variance is 2.475 and our residuals variance is .846. We can see that 74.53% of our variation is accounted for by our regression model, making our R² value .7453: This indicates that we have a quite good quality model- to find this high of an R² value indicates that these two variables are correlated heavily, whether it be due to causation or other lurking variables.
+Our total response variance is 3.321. This total variance can be broken up into two components, fitted values variance and residuals variance. Our fitted values variance is 2.475, and our residuals variance is 0.846. By comparing these two variance components, we can see that 74.53% of our variation is accounted for by our regression model, making our R² value 0.7453. This R² value suggests that approximately 74.53% of the variation in the number of babies per woman can be explained by the mean years in school (i.e. the independent variable in the model). This indicates a strong relationship between the two variables. However, while the model fits the data well, given the large R² value, it's important to note that correlation does not imply causation, and other unobserved factors may be influencing the observed relationship.
 
 
 ### Comparing Observed Data to Simulated Data
@@ -357,7 +350,8 @@ full_data |>
   geom_abline(slope = 1, intercept = 0, 
               linetype = "dashed", color = "red") +
   labs(x = "Simulated Mean Number of Babies", y = "", subtitle = "Observed Mean Number of Babies", 
-       title = "Simulated Mean Number of Babies vs. Observed Mean Number of Babies Per Woman Across 175 Countries in the World") +
+       title = "Simulated vs. Observed Mean Number of Babies Per Woman Across 
+175 Countries in the World") +
   scale_x_continuous(breaks = seq(0, 
 10, by = 2)) +
   scale_y_continuous(breaks = seq(0, 10, by = 2)) +
@@ -366,16 +360,15 @@ full_data |>
 
 Theoretically, if the simulated data were exactly the same as the observed data, the relationship would be modeled by the line y = x. We can see that the fitted (blue) linear regression line is approximately the line y = x (red). Thus, we can conclude that the simulated values for mean number of babies are similar to the observed values for mean number of babies.
 
-Below are the individual side-by-side plots of the simulated vs. the observed data.
+Below are the individual side-by-side plots, shown to compare the simulated vs. the observed data.
 
-```{r}
+```{r, fig.width=10, fig.height=6}
 #OBSERVED MEAN NUMBER OF BABIES VS. AVG MEAN YEARS IN SCHOOL
 obs_visual <- full_data |>
   ggplot(aes(x = avg_school, y = avg_babies)) +
   geom_point(alpha = 0.6, size = 1.5) +
   geom_smooth(method = "lm", se = FALSE) +
-  labs(x = "Average Mean Years in School", y = "", subtitle = "Observed Mean Number of Babies Per Woman", 
-       title = "Observed Mean Number of Babies Per Woman vs. Average Mean Years in School Across 175 Countries in the World") +
+  labs(x = "Average Mean Years in School", y = "", subtitle = "Observed Mean Number of Babies Per Woman") +
   scale_x_continuous(breaks = seq(0, 
 15, by = 3)) +
   scale_y_continuous(breaks = seq(0, 15, by = 3)) +
@@ -387,8 +380,7 @@ sim_visual <- full_data |>
   ggplot(aes(x = avg_school, y = sim_num_babies)) +
   geom_point(alpha = 0.6, size = 1.5) +
   geom_smooth(method = "lm", se = FALSE) +
-  labs(x = "Average Mean Years in School", y = "", subtitle = "Simulated Mean Number of Babies Per Woman", 
-       title = "Simulated Mean Number of Babies Per Woman vs. Average Mean Years in School Across 175 Countries in the World") +
+  labs(x = "Average Mean Years in School", y = "", subtitle = "Simulated Mean Number of Babies Per Woman") +
   scale_x_continuous(breaks = seq(0, 
 15, by = 3)) +
   scale_y_continuous(breaks = seq(0, 15, by = 3)) +
@@ -429,7 +421,8 @@ rsquareds <- map_dbl(simulated_datasets, function(sim_data) {
 
 # Plot the distribution of Rsquared values
 ggplot(tibble(Rsquared = rsquareds), aes(x = Rsquared)) +
-  geom_histogram(bins = 40, fill = "purple", alpha = 0.6) +
+  geom_histogram(bins = 40, fill = "purple", alpha = 0.6, aes(y = ..density..)) +
+  geom_density(color = "blue", size = 1) +
   labs(title = "Distribution of R-squared Values from Simulated Regressions",
        x = "R-squared Values",
        y = "Frequency") +
@@ -437,13 +430,13 @@ ggplot(tibble(Rsquared = rsquareds), aes(x = Rsquared)) +
 
 ```
 
-Our simulated R² values seem to follow a normal distribution, being centered at .55. This means that our simulated data, on average, has 55% of the variability in babies per woman being explained by the variability in mean years in school. Since our actual R² value in our observed data was .7453, we can say that our simulated model does not fully capture the relationship between the two variables in our dataset.
+The simulated R² values seem to follow a normal distribution, being centered at .55. This means that the simulated data, on average, contains 55% of the variability in the number of babies per woman being explained by the variability in mean years in school. Since the actual R² value in the observed data was .7453, it can be concluded that the simulated model does not fully capture the relationship between the two variables in the data set.
 
 ## Conclusion and Key Takeaways:
 
-Our analysis of the relationship between mean years of schooling for women aged 15-44 and babies per woman (total fertility rate) across 175 countries strongly supports our initial hypothesis. Through data visualization and statistical modeling, we observed a strong negative correlation between these two variables, suggesting that as the average years of schooling for women increases, the fertility rate tends to decrease.
+Our analysis of the relationship between the mean years of schooling for women aged 15-44 and the number of babies per woman (total fertility rate) across 175 countries strongly supports our initial hypothesis. Through data visualization and statistical modeling, we observed a strong negative correlation between these two variables, suggesting that as the average years of schooling for women increases, the fertility rate tends to decrease.
 
-The scatter plot and animated visualization confirmed this trend over time, showing that countries with higher education levels for women consistently have lower fertility rates. Additionally, our linear regression model estimated that for every additional year of schooling, the expected number of children per woman decreases by approximately 0.46 children. The model’s R² value of 0.7453 indicates that nearly 75% of the variability in fertility rates can be explained by differences in educational attainment.
+The scatter plot and animated visualization confirmed this trend over time, showing that countries with higher education levels for women consistently have lower fertility rates. Additionally, the linear regression model estimated that for every additional year of schooling, the expected number of children per woman decreases by approximately 0.466 children. The model’s R² value of 0.7453 indicates that nearly 75% of the variability in fertility rates can be explained by differences in educational attainment.
 
 However, our predictive checks and simulations suggest that while education is a significant factor, there are likely other contributing influences—such as economic conditions, cultural norms, access to healthcare, and governmental policies—that also impact fertility rates. Our simulated models had an average R² value of 0.55, meaning that while education remains a key explanatory variable, additional factors need to be explored for a more comprehensive understanding.
 
@@ -452,3 +445,5 @@ Overall, this study reinforces the importance of education in shaping demographi
 ## References
 
 “Countries and Areas.” U.S. Department of State, U.S. Department of State, www.state.gov/countries-and-areas-list/. Accessed 14 Mar. 2025.
+
+“Data.” Gapminder, www.gapminder.org/data/. Accessed 19 Mar. 2025.
